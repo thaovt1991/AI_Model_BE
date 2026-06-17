@@ -144,6 +144,7 @@ public sealed class LlamaChatService : IDisposable
             _weights = await LLamaWeights.LoadFromFileAsync(parameters, cancellationToken);
             _context = _weights.CreateContext(parameters);
             _executor = new InteractiveExecutor(_context);
+            
             _modelAvailable = true;
             _initialized = true;
 
@@ -172,12 +173,20 @@ public sealed class LlamaChatService : IDisposable
         };
     }
 
-    private static string BuildPrompt(string userMessage) =>
-        "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n" +
-        "Bạn là trợ lý AI chạy local, trả lời ngắn gọn bằng tiếng Việt." +
-        "<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n" +
-        $"{userMessage.Trim()}" +
-        "<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n";
+    private static string BuildPrompt(string userMessage)
+    {
+        return "<|system|>\n" +
+               "Bạn là trợ lý AI chạy local, trả lời ngắn gọn bằng tiếng Việt.<|end|>\n" +
+               "<|user|>\n" +
+               $"{userMessage.Trim()}<|end|>\n" +
+               "<|assistant|>\n";
+    }
+    //private static string BuildPrompt(string userMessage) =>
+    //    "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n" +
+    //    "Bạn là trợ lý AI chạy local, trả lời ngắn gọn bằng tiếng Việt." +
+    //    "<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n" +
+    //    $"{userMessage.Trim()}" +
+    //    "<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n";
 
     private static string BuildMockReply(string message) =>
         $"[Chế độ mock — chưa có file .gguf]\n" +

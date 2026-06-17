@@ -255,4 +255,5 @@ C:\Users\FPT\AppData\Local\Temp\ai-model-be-verify\AI_Model_BE.deps.json
 C:\Users\FPT\AppData\Local\Temp\ai-model-be-verify\AI_Model_BE.runtimeconfig.json
 C:\Users\FPT\AppData\Local\Temp\ai-model-be-verify\AI_Model_BE.dll
 C:\Users\FPT\AppData\Local\Temp\ai-model-be-verify\AI_Model_BE.pdb
+D:\Job\Model AI\AI_Model_BE\obj\Debug\net8.0\AI_Model_BE.sourcelink.json
 D:\Job\Model AI\AI_Model_BE\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
