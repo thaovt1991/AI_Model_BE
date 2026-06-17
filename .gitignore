@@ -1,0 +1,48 @@
+# Build output
+bin/
+obj/
+
+# Visual Studio / Rider / VS Code local files
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# OS files
+Thumbs.db
+Desktop.ini
+
+# Logs and temp files
+*.log
+*.tmp
+*.temp
+
+# Local environment / secrets
+.env
+.env.*
+appsettings.Local.json
+appsettings.*.Local.json
+
+# AI / ML model artifacts
+# Keep README files in Models/, but do not commit heavy generated model files.
+Models/*.zip
+Models/*.gguf
+Models/*.bin
+Models/*.onnx
+Models/*.pt
+Models/*.pth
+Models/*.safetensors
+
+# Test results / coverage
+TestResults/
+coverage/
+*.coverage
+*.coveragexml
+
+# NuGet local package output
+*.nupkg
+*.snupkg
+
