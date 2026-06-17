@@ -1,0 +1,6 @@
+@AI_Model_BE_HostAddress = http://localhost:5296
+
+GET {{AI_Model_BE_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
