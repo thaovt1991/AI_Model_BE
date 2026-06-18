@@ -16,12 +16,20 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddSingleton<MlPredictionService>();
+builder.Services.AddSingleton<DocumentKnowledgeService>();
 builder.Services.AddSingleton<LlamaChatService>();
 
 var app = builder.Build();
 
-// Khởi tạo model ML.NET ngay khi BE start
+// Khởi tạo model ML.NET ngay khi BE start — tránh chờ train/load ở request đầu tiên
 app.Services.GetRequiredService<MlPredictionService>().EnsureModelReady();
+
+// Nạp LLM (.gguf) sớm khi Backend khởi động — tránh user chờ 30–60 giây ở tin nhắn chat đầu tiên.
+// Tắt bằng cách đặt "Llama:WarmUpOnStart": false trong appsettings.json nếu muốn start nhanh hơn.
+if (builder.Configuration.GetValue("Llama:WarmUpOnStart", true))
+{
+    await app.Services.GetRequiredService<LlamaChatService>().WarmUpAsync();
+}
 
 app.UseCors("AngularDev");
 

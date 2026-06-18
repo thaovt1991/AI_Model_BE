@@ -10,7 +10,7 @@
         "projectUniqueName": "D:\\Job\\Model AI\\AI_Model_BE\\AI_Model_BE.csproj",
         "projectName": "AI_Model_BE",
         "projectPath": "D:\\Job\\Model AI\\AI_Model_BE\\AI_Model_BE.csproj",
-        "packagesPath": "C:\\Users\\FPT\\AppData\\Local\\Temp\\cursor-sandbox-cache\\b9b3326abfdb0714ef80daa1cf746c4c\\nuget",
+        "packagesPath": "C:\\Users\\FPT\\.nuget\\packages\\",
         "outputPath": "D:\\Job\\Model AI\\AI_Model_BE\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
@@ -52,6 +52,10 @@
           "framework": "net8.0",
           "targetAlias": "net8.0",
           "dependencies": {
+            "DocumentFormat.OpenXml": {
+              "target": "Package",
+              "version": "[3.5.1, )"
+            },
             "LLamaSharp": {
               "target": "Package",
               "version": "[0.27.0, )"
@@ -63,6 +67,10 @@
             "Microsoft.ML": {
               "target": "Package",
               "version": "[5.0.0, )"
+            },
+            "UglyToad.PdfPig": {
+              "target": "Package",
+              "version": "[1.7.0-custom-5, )"
             }
           },
           "imports": [

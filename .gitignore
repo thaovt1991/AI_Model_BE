@@ -36,6 +36,10 @@ Models/*.pt
 Models/*.pth
 Models/*.safetensors
 
+# Uploaded internal documents (user data)
+Documents/*
+!Documents/README.txt
+
 # Test results / coverage
 TestResults/
 coverage/
