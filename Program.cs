@@ -18,7 +18,7 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 // CORS: danh sách origin Frontend được gọi API — cấu hình trong appsettings.json → Cors:AllowedOrigins
-var corsSection = builder.Configuration.GetSection("Cors");
+var corsSection = builder.Configuration.GetSection("Cors") ;
 var corsPolicyName = corsSection["PolicyName"] ?? "SpaClients";
 var allowedOrigins = corsSection.GetSection("AllowedOrigins").Get<string[]>() ?? [];
 
@@ -29,8 +29,8 @@ builder.Services.AddCors(options =>
         options.AddPolicy("AllowAll",
          policy =>
          {
-             policy.WithOrigins("http://localhost:8099") // Địa chỉ của Frontend
-                   .AllowAnyHeader()
+             policy.WithOrigins(allowedOrigins) // Địa chỉ của Frontend
+                   .WithExposedHeaders("Content-Type", "Cache-Control", "Connection") // Quan trọng cho Streaming
                    .AllowAnyMethod()
                    .AllowCredentials(); // Rất quan trọng nếu bạn dùng Auth hoặc Streaming
          });
