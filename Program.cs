@@ -17,13 +17,21 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-// CORS: cho phép Angular dev server (port 4200) gọi API
+// CORS: danh sách origin Frontend được gọi API — cấu hình trong appsettings.json → Cors:AllowedOrigins
+var corsSection = builder.Configuration.GetSection("Cors");
+var corsPolicyName = corsSection["PolicyName"] ?? "SpaClients";
+var allowedOrigins = corsSection.GetSection("AllowedOrigins").Get<string[]>() ?? [];
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AngularDev", policy =>
+    options.AddPolicy(corsPolicyName, policy =>
     {
-        policy.WithOrigins("http://localhost:4200", "http://127.0.0.1:4200")
-            .AllowAnyHeader()
+        if (allowedOrigins.Length > 0)
+        {
+            policy.WithOrigins(allowedOrigins);
+        }
+
+        policy.AllowAnyHeader()
             .AllowAnyMethod();
     });
 });
@@ -44,7 +52,7 @@ if (builder.Configuration.GetValue("Llama:WarmUpOnStart", true))
     await app.Services.GetRequiredService<LlamaChatService>().WarmUpAsync();
 }
 
-app.UseCors("AngularDev");
+app.UseCors(corsPolicyName);
 
 var swaggerEnabled = app.Configuration.GetValue("Swagger:Enabled", app.Environment.IsDevelopment());
 if (swaggerEnabled)

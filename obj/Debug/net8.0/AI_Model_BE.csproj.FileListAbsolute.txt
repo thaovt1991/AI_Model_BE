@@ -269,3 +269,8 @@ D:\Job\Model AI\AI_Model_BE\bin\Debug\net8.0\Documents\index.json
 C:\Users\FPT\AppData\Local\Temp\ai-model-be-verify\Documents\df92db8953a3411e90333bf9f489a91b\chunks.json
 D:\Job\Model AI\AI_Model_BE\bin\Debug\net8.0\Documents\df92db8953a3411e90333bf9f489a91b\chunks.json
 D:\Job\Model AI\AI_Model_BE\obj\Debug\net8.0\AI_Model_BE.MvcApplicationPartsAssemblyInfo.cs
+D:\Job\Model AI\AI_Model_BE\bin\Debug\net8.0\Microsoft.OpenApi.dll
+D:\Job\Model AI\AI_Model_BE\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
+D:\Job\Model AI\AI_Model_BE\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+D:\Job\Model AI\AI_Model_BE\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\FPT\AppData\Local\Temp\ai-model-be-verify\appsettings.Production.json
