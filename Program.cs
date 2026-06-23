@@ -26,13 +26,14 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(corsPolicyName, policy =>
     {
-        if (allowedOrigins.Length > 0)
-        {
-            policy.WithOrigins(allowedOrigins);
-        }
-
-        policy.AllowAnyHeader()
-            .AllowAnyMethod();
+        options.AddPolicy("AllowAll",
+         policy =>
+         {
+             policy.WithOrigins("http://localhost:8099") // Địa chỉ của Frontend
+                   .AllowAnyHeader()
+                   .AllowAnyMethod()
+                   .AllowCredentials(); // Rất quan trọng nếu bạn dùng Auth hoặc Streaming
+         });
     });
 });
 
