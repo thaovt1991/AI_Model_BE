@@ -227,7 +227,7 @@ public sealed class LlamaChatService : IDisposable
             var sw = Stopwatch.StartNew();
 
             // Đọc đường dẫn file .gguf từ appsettings.json → Llama:ModelPath
-            var modelPath = _configuration["Llama:ModelPath"] ?? "Models/llama-model.gguf";
+            var modelPath = _configuration["Llama:ModelPath"] ?? "Models/Meta-Llama-3-8B-Instruct-Q4_K_M.gguf";
             var absolutePath = Path.GetFullPath(modelPath); // Chuyển đổi thành đường dẫn đầy đủ
             _logger.LogInformation($"--- DEBUG PATH ---");
             _logger.LogInformation($"Configured path: {modelPath}");
