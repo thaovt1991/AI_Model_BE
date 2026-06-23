@@ -27,7 +27,8 @@ builder.Services.AddCors(options =>
     options.AddPolicy(corsPolicyName, policy =>
     {
 
-        policy.WithOrigins(allowedOrigins) // Địa chỉ của Frontend
+        //policy.WithOrigins(allowedOrigins) // Địa chỉ của Frontend
+        policy.AllowAnyOrigin()
               .WithExposedHeaders("Content-Type", "Cache-Control", "Connection") // Quan trọng cho Streaming
               .AllowAnyMethod()
               .AllowCredentials(); // Rất quan trọng nếu bạn dùng Auth hoặc Streaming
@@ -50,7 +51,7 @@ if (builder.Configuration.GetValue("Llama:WarmUpOnStart", true))
 {
     await app.Services.GetRequiredService<LlamaChatService>().WarmUpAsync();
 }
-
+app.UseRouting();
 app.UseCors(corsPolicyName);
 
 var swaggerEnabled = app.Configuration.GetValue("Swagger:Enabled", app.Environment.IsDevelopment());
