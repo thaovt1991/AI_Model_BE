@@ -6,7 +6,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-// Swagger — mở /swagger để kiểm tra BE đang chạy và thử API
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
@@ -17,22 +16,28 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-// CORS: danh sách origin Frontend được gọi API — cấu hình trong appsettings.json → Cors:AllowedOrigins
+// CORS — đọc từ appsettings.json → Cors:AllowedOrigins
+// Lưu ý: KHÔNG dùng AllowAnyOrigin() + AllowCredentials() cùng lúc — browser sẽ chặn.
 var corsSection = builder.Configuration.GetSection("Cors");
 var corsPolicyName = corsSection["PolicyName"] ?? "SpaClients";
-var allowedOrigins = corsSection.GetSection("AllowedOrigins").Get<string[]>() ?? [];
+var allowedOrigins = corsSection.GetSection("AllowedOrigins").Get<string[]>()
+    ?.Where(static origin => !string.IsNullOrWhiteSpace(origin))
+    .Select(static origin => origin.Trim().TrimEnd('/'))
+    .Distinct(StringComparer.OrdinalIgnoreCase)
+    .ToArray() ?? [];
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(corsPolicyName, policy =>
     {
+        if (allowedOrigins.Length > 0)
+        {
+            policy.WithOrigins(allowedOrigins);
+        }
 
-        //policy.WithOrigins(allowedOrigins) // Địa chỉ của Frontend
-        policy.AllowAnyOrigin()
-              .WithExposedHeaders("Content-Type", "Cache-Control", "Connection") // Quan trọng cho Streaming
-              .AllowAnyMethod()
-              .AllowCredentials(); // Rất quan trọng nếu bạn dùng Auth hoặc Streaming
-
+        policy.AllowAnyHeader()
+            .AllowAnyMethod()
+            .WithExposedHeaders("Content-Type", "Cache-Control", "Connection");
     });
 });
 
@@ -42,15 +47,24 @@ builder.Services.AddSingleton<LlamaChatService>();
 
 var app = builder.Build();
 
-// Khởi tạo model ML.NET ngay khi BE start — tránh chờ train/load ở request đầu tiên
-//app.Services.GetRequiredService<MlPredictionService>().EnsureModelReady(); //chua lam nen cmt
+if (allowedOrigins.Length == 0)
+{
+    app.Logger.LogWarning(
+        "Cors:AllowedOrigins dang rong — Frontend tren IIS se bi loi CORS. Them URL UI vao appsettings.");
+}
+else
+{
+    app.Logger.LogInformation(
+        "CORS policy {Policy}: {Origins}",
+        corsPolicyName,
+        string.Join(", ", allowedOrigins));
+}
 
-// Nạp LLM (.gguf) sớm khi Backend khởi động — tránh user chờ 30–60 giây ở tin nhắn chat đầu tiên.
-// Tắt bằng cách đặt "Llama:WarmUpOnStart": false trong appsettings.json nếu muốn start nhanh hơn.
 if (builder.Configuration.GetValue("Llama:WarmUpOnStart", true))
 {
     await app.Services.GetRequiredService<LlamaChatService>().WarmUpAsync();
 }
+
 app.UseRouting();
 app.UseCors(corsPolicyName);
 
@@ -66,7 +80,6 @@ if (swaggerEnabled)
 }
 
 app.MapGet("/", () => Results.Redirect("/swagger")).ExcludeFromDescription();
-
 app.MapControllers();
 
 app.Run();
