@@ -10,7 +10,7 @@
         "projectUniqueName": "D:\\Job\\Model AI\\AI_Model_BE\\AI_Model_BE.csproj",
         "projectName": "AI_Model_BE",
         "projectPath": "D:\\Job\\Model AI\\AI_Model_BE\\AI_Model_BE.csproj",
-        "packagesPath": "C:\\Users\\FPT\\.nuget\\packages\\",
+        "packagesPath": "C:\\Users\\FPT\\AppData\\Local\\Temp\\cursor-sandbox-cache\\459e91adbb94c887e3895e28c7ec0b6d\\nuget",
         "outputPath": "D:\\Job\\Model AI\\AI_Model_BE\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
@@ -67,6 +67,10 @@
             "Microsoft.ML": {
               "target": "Package",
               "version": "[5.0.0, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[7.2.0, )"
             },
             "UglyToad.PdfPig": {
               "target": "Package",

@@ -22,6 +22,18 @@ public class AiController : ControllerBase
         _documentService = documentService;
     }
 
+    /// <summary>GET /api/ai/health — kiểm tra nhanh Backend đã chạy OK.</summary>
+    [HttpGet("health")]
+    [ProducesResponseType(typeof(HealthResponse), StatusCodes.Status200OK)]
+    public ActionResult<HealthResponse> Health()
+    {
+        return Ok(new HealthResponse(
+            Status: "ok",
+            Service: "AI_Model_BE",
+            Environment: Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production",
+            UtcTime: DateTime.UtcNow));
+    }
+
     [HttpPost("predict")]
     public ActionResult<PredictResponse> Predict([FromBody] PredictRequest request)
     {

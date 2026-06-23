@@ -1,8 +1,21 @@
 using AI_Model_BE.Services;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+
+// Swagger — mở /swagger để kiểm tra BE đang chạy và thử API
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "AI Local API",
+        Version = "v1",
+        Description = "Backend ML.NET + LLamaSharp local. Dùng GET /api/ai/health để kiểm tra server OK."
+    });
+});
 
 // CORS: cho phép Angular dev server (port 4200) gọi API
 builder.Services.AddCors(options =>
@@ -32,6 +45,19 @@ if (builder.Configuration.GetValue("Llama:WarmUpOnStart", true))
 }
 
 app.UseCors("AngularDev");
+
+var swaggerEnabled = app.Configuration.GetValue("Swagger:Enabled", app.Environment.IsDevelopment());
+if (swaggerEnabled)
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "AI Local API v1");
+        options.RoutePrefix = "swagger";
+    });
+}
+
+app.MapGet("/", () => Results.Redirect("/swagger")).ExcludeFromDescription();
 
 app.MapControllers();
 
