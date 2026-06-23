@@ -26,7 +26,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(corsPolicyName, policy =>
     {
-        options.AddPolicy("AllowAll",
+        options.AddPolicy(corsPolicyName,
          policy =>
          {
              policy.WithOrigins(allowedOrigins) // Địa chỉ của Frontend
