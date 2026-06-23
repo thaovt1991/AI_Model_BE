@@ -228,6 +228,11 @@ public sealed class LlamaChatService : IDisposable
 
             // Đọc đường dẫn file .gguf từ appsettings.json → Llama:ModelPath
             var modelPath = _configuration["Llama:ModelPath"] ?? "Models/llama-model.gguf";
+            var absolutePath = Path.GetFullPath(modelPath); // Chuyển đổi thành đường dẫn đầy đủ
+            _logger.LogInformation($"--- DEBUG PATH ---");
+            _logger.LogInformation($"Configured path: {modelPath}");
+            _logger.LogInformation($"Absolute path: {absolutePath}");
+            _logger.LogInformation($"File exists: {File.Exists(absolutePath)}");
 
             // Nếu là đường dẫn tương đối → ghép với thư mục chạy app
             if (!Path.IsPathRooted(modelPath))
