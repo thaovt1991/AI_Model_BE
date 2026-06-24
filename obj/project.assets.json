@@ -2289,7 +2289,7 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\FPT\\AppData\\Local\\Temp\\cursor-sandbox-cache\\6728aeabebf4aaafb95698592b6ec821\\nuget": {},
+    "C:\\Users\\FPT\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
@@ -2298,7 +2298,7 @@
       "projectUniqueName": "D:\\Job\\Model AI\\AI_Model_BE\\AI_Model_BE.csproj",
       "projectName": "AI_Model_BE",
       "projectPath": "D:\\Job\\Model AI\\AI_Model_BE\\AI_Model_BE.csproj",
-      "packagesPath": "C:\\Users\\FPT\\AppData\\Local\\Temp\\cursor-sandbox-cache\\6728aeabebf4aaafb95698592b6ec821\\nuget",
+      "packagesPath": "C:\\Users\\FPT\\.nuget\\packages\\",
       "outputPath": "D:\\Job\\Model AI\\AI_Model_BE\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
