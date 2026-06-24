@@ -30,12 +30,12 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(corsPolicyName, policy =>
     {
-        if (allowedOrigins.Length > 0)
-        {
-            policy.WithOrigins(allowedOrigins);
-        }
-
-        policy.AllowAnyHeader()
+        //if (allowedOrigins.Length > 0)
+        //{
+        //    policy.WithOrigins(allowedOrigins);
+        //}
+        policy.AllowAnyOrigin()
+            .AllowAnyHeader()
             .AllowAnyMethod()
             .WithExposedHeaders("Content-Type", "Cache-Control", "Connection");
     });
