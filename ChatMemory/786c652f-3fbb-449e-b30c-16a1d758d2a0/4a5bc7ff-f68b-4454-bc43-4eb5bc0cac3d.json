@@ -1,0 +1,14 @@
+{
+  "MemoryId": "786c652f-3fbb-449e-b30c-16a1d758d2a0/4a5bc7ff-f68b-4454-bc43-4eb5bc0cac3d",
+  "Turns": [
+    {
+      "UserMessage": "B\u1EA1n t\u00EAn g\u00EC",
+      "AssistantReply": "T\u00F4i l\u00E0 Zeto, tr\u1EE3 l\u00FD AI ch\u1EA1y local c\u1EE7a b\u1EA1n!"
+    },
+    {
+      "UserMessage": "tao m\u1EDBi \u0111\u1EB7c t\u00EAn cho m\u00E0y l\u00E0 tara m\u00E0",
+      "AssistantReply": "Thay \u0111\u1ED5i t\u00EAn th\u00E0nh Tara r\u1ED3i! T\u00F4i l\u00E0 Tara, tr\u1EE3 l\u00FD AI ch\u1EA1y local c\u1EE7a b\u1EA1n!"
+    }
+  ],
+  "UpdatedAt": "2026-06-24T15:52:32.7305905Z"
+}

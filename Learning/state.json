@@ -1,0 +1,8 @@
+{
+  "status": "Collecting",
+  "trainedSamples": 0,
+  "adapterVersion": 0,
+  "lastTrainUtc": null,
+  "lastError": null,
+  "adapterPath": "D:\\Job\\Model AI\\AI_Model_BE\\Learning/Adapters/latest.gguf"
+}

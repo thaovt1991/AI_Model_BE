@@ -7,6 +7,11 @@ public record PredictResponse(
     string Currency,
     string Message);
 
-public record ChatRequest(string Message, bool Stream = false, Guid[]? DocumentIds = null);
+public record ChatRequest(
+    string Message,
+    bool Stream = false,
+    Guid[]? DocumentIds = null,
+    string? ConversationId = null,
+    string? ProfileId = null);
 
-public record ChatResponse(string Reply, bool IsMock = false);
+public record ChatResponse(string Reply, bool IsMock = false, int HistoryTurns = 0);

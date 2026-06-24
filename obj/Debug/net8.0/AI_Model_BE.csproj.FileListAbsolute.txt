@@ -274,3 +274,11 @@ D:\Job\Model AI\AI_Model_BE\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
 D:\Job\Model AI\AI_Model_BE\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 D:\Job\Model AI\AI_Model_BE\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 C:\Users\FPT\AppData\Local\Temp\ai-model-be-verify\appsettings.Production.json
+D:\Job\Model AI\AI_Model_BE\bin\Debug\net8.0\appsettings.Production.json
+D:\Job\Model AI\AI_Model_BE\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
+D:\Job\Model AI\AI_Model_BE\bin\Debug\net8.0\ChatMemory\786c652f-3fbb-449e-b30c-16a1d758d2a0.json
+D:\Job\Model AI\AI_Model_BE\bin\Debug\net8.0\Learning\settings.json
+D:\Job\Model AI\AI_Model_BE\bin\Debug\net8.0\Learning\state.json
+D:\Job\Model AI\AI_Model_BE\bin\Debug\net8.0\ChatMemory\786c652f-3fbb-449e-b30c-16a1d758d2a0\4a5bc7ff-f68b-4454-bc43-4eb5bc0cac3d.json
+D:\Job\Model AI\AI_Model_BE\bin\Debug\net8.0\ChatMemory\786c652f-3fbb-449e-b30c-16a1d758d2a0\80071b21-65b6-4adc-b5c8-896ef7df1576.json
+D:\Job\Model AI\AI_Model_BE\bin\Debug\net8.0\ChatMemory\786c652f-3fbb-449e-b30c-16a1d758d2a0\8cbab4ad-db42-4e1c-8eae-4e9196561a11.json

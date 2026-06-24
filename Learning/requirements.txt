@@ -1,0 +1,6 @@
+# Tuỳ chọn — chỉ cần khi bật Learning:Enabled = true và dùng HuggingFace PEFT
+torch>=2.2.0
+transformers>=4.40.0
+peft>=0.10.0
+datasets>=2.19.0
+accelerate>=0.30.0

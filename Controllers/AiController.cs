@@ -11,15 +11,27 @@ public class AiController : ControllerBase
     private readonly MlPredictionService _mlService;
     private readonly LlamaChatService _llamaService;
     private readonly DocumentKnowledgeService _documentService;
+    private readonly ChatMemoryService _chatMemory;
+    private readonly ChatProfileSettingsService _profileSettings;
+    private readonly ModelLearningService _modelLearning;
+    private readonly LearningSettingsService _learningSettings;
 
     public AiController(
         MlPredictionService mlService,
         LlamaChatService llamaService,
-        DocumentKnowledgeService documentService)
+        DocumentKnowledgeService documentService,
+        ChatMemoryService chatMemory,
+        ChatProfileSettingsService profileSettings,
+        ModelLearningService modelLearning,
+        LearningSettingsService learningSettings)
     {
         _mlService = mlService;
         _llamaService = llamaService;
         _documentService = documentService;
+        _chatMemory = chatMemory;
+        _profileSettings = profileSettings;
+        _modelLearning = modelLearning;
+        _learningSettings = learningSettings;
     }
 
     /// <summary>GET /api/ai/health — kiểm tra nhanh Backend đã chạy OK.</summary>
@@ -99,7 +111,12 @@ public class AiController : ControllerBase
         [FromBody] ChatRequest request,
         CancellationToken cancellationToken)
     {
-        var reply = await _llamaService.ChatAsync(request.Message, request.DocumentIds, cancellationToken);
+        var reply = await _llamaService.ChatAsync(
+            request.Message,
+            request.DocumentIds,
+            request.ConversationId,
+            request.ProfileId,
+            cancellationToken);
         return Ok(reply);
     }
 
@@ -113,10 +130,100 @@ public class AiController : ControllerBase
         await foreach (var token in _llamaService.ChatStreamAsync(
                            request.Message,
                            request.DocumentIds,
+                           request.ConversationId,
+                           request.ProfileId,
                            cancellationToken))
         {
             await Response.WriteAsync(token, cancellationToken);
             await Response.Body.FlushAsync(cancellationToken);
         }
+    }
+
+    /// <summary>GET /api/ai/learning/settings — cài đặt học model + trạng thái (cho UI Thiết lập).</summary>
+    [HttpGet("learning/settings")]
+    public ActionResult<LearningSettingsResponse> GetLearningSettings()
+    {
+        return Ok(_modelLearning.GetSettingsResponse());
+    }
+
+    /// <summary>PUT /api/ai/learning/settings — bật/tắt học vào model hoặc thu thập dữ liệu.</summary>
+    [HttpPut("learning/settings")]
+    public ActionResult<LearningSettingsResponse> UpdateLearningSettings(
+        [FromBody] UpdateLearningSettingsRequest request)
+    {
+        _learningSettings.Update(request.Enabled, request.CollectData);
+        _modelLearning.RefreshStatus();
+        return Ok(_modelLearning.GetSettingsResponse());
+    }
+
+    /// <summary>
+    /// GET /api/ai/learning/status — xem học ngầm đang ở giai đoạn nào.
+    /// totalSamples = số cặp hỏi/đáp đã gom; status = Collecting khi chưa bật train.
+    /// </summary>
+    [HttpGet("learning/status")]
+    public ActionResult<LearningStatusResponse> GetLearningStatus()
+    {
+        return Ok(_modelLearning.GetStatus());
+    }
+
+    /// <summary>
+    /// POST /api/ai/learning/train — ép train ngay (cần Learning:Enabled = true trong appsettings).
+    /// Thường không cần gọi tay — BackgroundModelLearningHostedService tự train khi máy rảnh.
+    /// </summary>
+    [HttpPost("learning/train")]
+    public async Task<ActionResult<LearningTrainResponse>> TrainLearning(CancellationToken cancellationToken)
+    {
+        var result = await _modelLearning.TryTrainInBackgroundAsync(cancellationToken);
+        return result.Started ? Ok(result) : BadRequest(result);
+    }
+
+    /// <summary>Lấy cài đặt profile (tên AI, ...).</summary>
+    [HttpGet("chat/profile")]
+    public ActionResult<ChatProfileSettingsResponse> GetChatProfile([FromQuery] string? profileId)
+    {
+        if (string.IsNullOrWhiteSpace(profileId))
+        {
+            return BadRequest(new { message = "Thiếu profileId." });
+        }
+
+        return Ok(_profileSettings.Get(profileId));
+    }
+
+    /// <summary>Cập nhật tên AI cho profile.</summary>
+    [HttpPut("chat/profile")]
+    public ActionResult<ChatProfileSettingsResponse> UpdateChatProfile(
+        [FromQuery] string? profileId,
+        [FromBody] UpdateChatProfileSettingsRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(profileId))
+        {
+            return BadRequest(new { message = "Thiếu profileId." });
+        }
+
+        try
+        {
+            return Ok(_profileSettings.Update(profileId, request.AiName));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    /// <summary>Lấy toàn bộ lịch sử đã lưu (khôi phục UI sau khi mở lại trang).</summary>
+    [HttpGet("chat/memory")]
+    public ActionResult<IReadOnlyList<ChatTurn>> GetChatMemory(
+        [FromQuery] string? profileId,
+        [FromQuery] string? conversationId)
+    {
+        var turns = _chatMemory.GetAllStored(profileId, conversationId);
+        return Ok(turns);
+    }
+
+    /// <summary>Xóa toàn bộ trí nhớ hội thoại của profile (mọi cuộc chat).</summary>
+    [HttpDelete("chat/memory")]
+    public IActionResult ClearChatMemory([FromQuery] string? profileId)
+    {
+        return _chatMemory.ClearProfile(profileId) ? NoContent() : NotFound();
     }
 }

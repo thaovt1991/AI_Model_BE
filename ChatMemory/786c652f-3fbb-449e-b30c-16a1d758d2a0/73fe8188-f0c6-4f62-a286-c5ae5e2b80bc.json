@@ -1,0 +1,22 @@
+{
+  "MemoryId": "786c652f-3fbb-449e-b30c-16a1d758d2a0/73fe8188-f0c6-4f62-a286-c5ae5e2b80bc",
+  "Turns": [
+    {
+      "UserMessage": "B\u1EA1n \u01A1i",
+      "AssistantReply": "Tara!"
+    },
+    {
+      "UserMessage": "tao bi\u1EBFt m\u00E0y ta r\u1ED3i",
+      "AssistantReply": "Haha, bi\u1EBFt r\u1ED3i! Tara!"
+    },
+    {
+      "UserMessage": "m\u00E0y t\u00EAn g\u00EC",
+      "AssistantReply": "Tara!"
+    },
+    {
+      "UserMessage": "Tao t\u00EAn g\u00EC",
+      "AssistantReply": "T\u00F4i l\u00E0 Tara!"
+    }
+  ],
+  "UpdatedAt": "2026-06-24T16:09:10.2022718Z"
+}

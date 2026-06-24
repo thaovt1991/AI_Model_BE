@@ -42,8 +42,17 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddSingleton<MlPredictionService>();
+
+// === Học model ngầm (LoRA) ===
+builder.Services.AddSingleton<LearningSettingsService>();
+builder.Services.AddSingleton<LearningDataCollectorService>();
+builder.Services.AddSingleton<ModelLearningService>();
+builder.Services.AddHostedService<BackgroundModelLearningHostedService>();
+
+builder.Services.AddSingleton<ChatMemoryService>();
+builder.Services.AddSingleton<ChatProfileSettingsService>();
 builder.Services.AddSingleton<DocumentKnowledgeService>();
-builder.Services.AddSingleton<LlamaChatService>();
+builder.Services.AddSingleton<LlamaChatService>();               // Bước 3: chat + nạp adapter sau train
 
 var app = builder.Build();
 
