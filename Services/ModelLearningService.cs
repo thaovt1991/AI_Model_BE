@@ -64,6 +64,8 @@ public sealed class ModelLearningService
     private int _adapterVersion;   // Tăng mỗi lần train thành công — theo dõi phiên bản adapter
     private DateTime? _lastTrainUtc;
     private string? _lastError;
+    private IReadOnlyList<string> _lastLearnedTopics = [];
+    private string? _lastTrainingMessage;
 
     public ModelLearningService(
         IWebHostEnvironment env,
@@ -118,7 +120,9 @@ public sealed class ModelLearningService
             AdapterPath: AdapterExists ? _adapterPath : null,
             AdapterVersion: _adapterVersion,
             LastError: _lastError,
-            LastTrainUtc: _lastTrainUtc);
+            LastTrainUtc: _lastTrainUtc,
+            LearnedTopics: _lastLearnedTopics,
+            LastTrainingMessage: _lastTrainingMessage);
     }
 
     /// <summary>
@@ -178,6 +182,11 @@ public sealed class ModelLearningService
             _lastTrainUtc = DateTime.UtcNow;
             _status = LearningJobStatus.Ready;
             _lastError = null;
+
+            var trainedBatch = _collector.ReadRecentSamples(_maxSamplesPerTrain);
+            _lastLearnedTopics = SummarizeLearnedTopics(trainedBatch);
+            _lastTrainingMessage = BuildTrainingMessage(_lastLearnedTopics, trainedBatch.Count);
+
             PersistState();
 
             // Bước 3: báo LlamaChatService nạp adapter mới — model chat sẽ "thông minh hơn" theo dữ liệu đã học
@@ -188,7 +197,10 @@ public sealed class ModelLearningService
                 _adapterVersion,
                 _adapterPath);
 
-            return new LearningTrainResponse(true, $"Đã train adapter v{_adapterVersion}.");
+            return new LearningTrainResponse(
+                true,
+                $"Đã train adapter v{_adapterVersion}.",
+                _lastTrainingMessage);
         }
         catch (Exception ex)
         {
@@ -313,7 +325,10 @@ public sealed class ModelLearningService
             status.PendingSamples,
             status.AdapterPath,
             status.AdapterVersion,
-            status.LastError);
+            status.LastError,
+            status.LastTrainUtc,
+            status.LearnedTopics,
+            status.LastTrainingMessage);
     }
 
     /// <summary>Cập nhật trạng thái sau khi user đổi toggle trên UI.</summary>
@@ -373,6 +388,22 @@ public sealed class ModelLearningService
                 _lastError = err.GetString();
             }
 
+            if (root.TryGetProperty("lastLearnedTopics", out var topics) &&
+                topics.ValueKind == JsonValueKind.Array)
+            {
+                _lastLearnedTopics = topics.EnumerateArray()
+                    .Select(static t => t.GetString())
+                    .Where(static t => !string.IsNullOrWhiteSpace(t))
+                    .Select(static t => t!)
+                    .ToList();
+            }
+
+            if (root.TryGetProperty("lastTrainingMessage", out var trainingMessage) &&
+                trainingMessage.ValueKind == JsonValueKind.String)
+            {
+                _lastTrainingMessage = trainingMessage.GetString();
+            }
+
             if (root.TryGetProperty("status", out var status) &&
                 Enum.TryParse<LearningJobStatus>(status.GetString(), out var parsedStatus))
             {
@@ -394,7 +425,9 @@ public sealed class ModelLearningService
             adapterVersion = _adapterVersion,
             lastTrainUtc = _lastTrainUtc,
             lastError = _lastError,
-            adapterPath = _adapterPath
+            adapterPath = _adapterPath,
+            lastLearnedTopics = _lastLearnedTopics,
+            lastTrainingMessage = _lastTrainingMessage
         };
 
         File.WriteAllText(_statePath, JsonSerializer.Serialize(state, JsonOptions));
@@ -403,5 +436,72 @@ public sealed class ModelLearningService
     private static string ResolvePath(string path, string contentRoot)
     {
         return Path.IsPathRooted(path) ? path : Path.Combine(contentRoot, path);
+    }
+
+    private static IReadOnlyList<string> SummarizeLearnedTopics(IReadOnlyList<LearningSample> samples)
+    {
+        var topics = new List<string>();
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var sample in samples.Reverse())
+        {
+            var topic = ExtractTopic(sample.Instruction);
+            if (topic is null || !seen.Add(topic))
+            {
+                continue;
+            }
+
+            topics.Add(topic);
+            if (topics.Count >= 5)
+            {
+                break;
+            }
+        }
+
+        return topics;
+    }
+
+    private static string? ExtractTopic(string instruction)
+    {
+        var text = instruction.Trim().Replace('\n', ' ').Replace('\r', ' ');
+        while (text.Contains("  ", StringComparison.Ordinal))
+        {
+            text = text.Replace("  ", " ", StringComparison.Ordinal);
+        }
+
+        if (text.Length < 4)
+        {
+            return null;
+        }
+
+        if (text.Equals("ping", StringComparison.OrdinalIgnoreCase) ||
+            text.Equals("hi", StringComparison.OrdinalIgnoreCase))
+        {
+            return null;
+        }
+
+        const int maxLen = 48;
+        return text.Length > maxLen ? $"{text[..maxLen].TrimEnd()}…" : text;
+    }
+
+    private static string BuildTrainingMessage(IReadOnlyList<string> topics, int sampleCount)
+    {
+        if (topics.Count == 0)
+        {
+            return $"Đã học xong từ {sampleCount} mẫu hội thoại gần đây.";
+        }
+
+        if (topics.Count == 1)
+        {
+            return $"đã học kiến thức mới về: {topics[0]}";
+        }
+
+        var preview = string.Join(", ", topics.Take(4));
+        if (topics.Count > 4)
+        {
+            preview += $" và {topics.Count - 4} chủ đề khác";
+        }
+
+        return $"đã học kiến thức mới về: {preview}";
     }
 }

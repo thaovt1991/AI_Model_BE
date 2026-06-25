@@ -60,9 +60,11 @@ public record LearningStatusResponse(
     string? AdapterPath,
     int AdapterVersion,
     string? LastError,
-    DateTime? LastTrainUtc);
+    DateTime? LastTrainUtc,
+    IReadOnlyList<string> LearnedTopics,
+    string? LastTrainingMessage);
 
-public record LearningTrainResponse(bool Started, string Message);
+public record LearningTrainResponse(bool Started, string Message, string? TrainingMessage = null);
 
 /// <summary>Cài đặt học model — có thể đổi từ UI, lưu file Learning/settings.json.</summary>
 public record LearningSettingsDto(bool Enabled, bool CollectData);
@@ -78,4 +80,7 @@ public record LearningSettingsResponse(
     int PendingSamples,
     string? AdapterPath,
     int AdapterVersion,
-    string? LastError);
+    string? LastError,
+    DateTime? LastTrainUtc,
+    IReadOnlyList<string> LearnedTopics,
+    string? LastTrainingMessage);
