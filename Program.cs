@@ -1,5 +1,11 @@
+using AI_Model_BE.Programs;
 using AI_Model_BE.Services;
 using Microsoft.OpenApi.Models;
+
+if (args.Contains("lotto-demo", StringComparer.OrdinalIgnoreCase))
+{
+    Environment.Exit(await LottoForecastConsoleApp.RunAsync(args));
+}
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,7 +47,20 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.AddMemoryCache();
+builder.Services.AddHttpClient(nameof(MinhNgocLotteryScraper), client =>
+{
+    client.Timeout = TimeSpan.FromSeconds(30);
+    client.DefaultRequestHeaders.UserAgent.ParseAdd(
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AI_Model_BE/1.0");
+    client.DefaultRequestHeaders.AcceptLanguage.ParseAdd("vi-VN,vi;q=0.9");
+});
+builder.Services.AddSingleton<MinhNgocScrapeSettingsService>();
+builder.Services.AddSingleton<MinhNgocLotteryScraper>();
 builder.Services.AddSingleton<MlPredictionService>();
+builder.Services.AddSingleton<LotteryRecordLoader>();
+builder.Services.AddSingleton<LottoForecastService>();
+builder.Services.AddSingleton<LottoChatIntentService>();
 
 // === Học model ngầm (LoRA) ===
 builder.Services.AddSingleton<LearningSettingsService>();

@@ -9,34 +9,27 @@ namespace AI_Model_BE.Services;
 /// Service xử lý dự đoán giá nhà bằng ML.NET.
 /// Được gọi từ AiController endpoint POST /api/ai/predict.
 /// </summary>
-public sealed class MlPredictionService
+public sealed partial class MlPredictionService
 {
-    // Ghi log ra console khi huấn luyện / nạp model
     private readonly ILogger<MlPredictionService> _logger;
-
-    // Đường dẫn file model đã lưu (house-price-model.zip)
     private readonly string _modelPath;
-
-    // Khóa đồng bộ: tránh 2 thread cùng huấn luyện/nạp model một lúc
     private readonly object _lock = new();
-
-    // Engine dùng để gọi Predict() — null cho đến khi model được nạp xong
     private PredictionEngine<HouseData, HousePrediction>? _predictionEngine;
 
-    /// <summary>
-    /// Constructor — ASP.NET Core tự inject IWebHostEnvironment và ILogger.
-    /// </summary>
-    public MlPredictionService(IWebHostEnvironment env, ILogger<MlPredictionService> logger)
+    public MlPredictionService(
+        IWebHostEnvironment env,
+        ILogger<MlPredictionService> logger,
+        MinhNgocLotteryScraper minhNgocScraper,
+        LotteryRecordLoader lotteryLoader,
+        MinhNgocScrapeSettingsService scrapeSettings)
     {
         _logger = logger;
+        _minhNgocScraper = minhNgocScraper;
+        _lotteryLoader = lotteryLoader;
+        _scrapeSettings = scrapeSettings;
 
-        // Tạo đường dẫn thư mục Models/ ngay trong project Backend
         var modelsDir = Path.Combine(env.ContentRootPath, "Models");
-
-        // Tạo thư mục nếu chưa có (không lỗi nếu đã tồn tại)
         Directory.CreateDirectory(modelsDir);
-
-        // File model sẽ được lưu tại đây sau lần huấn luyện đầu tiên
         _modelPath = Path.Combine(modelsDir, "house-price-model.zip");
     }
 

@@ -1,0 +1,242 @@
+﻿[
+    {
+        "id":  1,
+        "maDai":  "khanh-hoa",
+        "ngayQuay":  "2025-01-01T18:00:00",
+        "ketQua":  "75,75,15,22,30,12"
+    },
+    {
+        "id":  2,
+        "maDai":  "khanh-hoa",
+        "ngayQuay":  "2025-01-02T18:00:00",
+        "ketQua":  "39,28,13,53,8,60"
+    },
+    {
+        "id":  3,
+        "maDai":  "khanh-hoa",
+        "ngayQuay":  "2025-01-03T18:00:00",
+        "ketQua":  "58,49,51,3,79,78"
+    },
+    {
+        "id":  4,
+        "maDai":  "khanh-hoa",
+        "ngayQuay":  "2025-01-04T18:00:00",
+        "ketQua":  "88,68,7,20,15,68"
+    },
+    {
+        "id":  5,
+        "maDai":  "khanh-hoa",
+        "ngayQuay":  "2025-01-05T18:00:00",
+        "ketQua":  "50,54,78,72,29,16"
+    },
+    {
+        "id":  6,
+        "maDai":  "khanh-hoa",
+        "ngayQuay":  "2025-01-06T18:00:00",
+        "ketQua":  "37,93,78,0,77,0"
+    },
+    {
+        "id":  7,
+        "maDai":  "khanh-hoa",
+        "ngayQuay":  "2025-01-07T18:00:00",
+        "ketQua":  "59,39,97,84,41,7"
+    },
+    {
+        "id":  8,
+        "maDai":  "khanh-hoa",
+        "ngayQuay":  "2025-01-08T18:00:00",
+        "ketQua":  "41,39,21,34,11,28"
+    },
+    {
+        "id":  9,
+        "maDai":  "khanh-hoa",
+        "ngayQuay":  "2025-01-09T18:00:00",
+        "ketQua":  "10,79,88,45,34,62"
+    },
+    {
+        "id":  10,
+        "maDai":  "khanh-hoa",
+        "ngayQuay":  "2025-01-10T18:00:00",
+        "ketQua":  "45,54,60,46,72,76"
+    },
+    {
+        "id":  11,
+        "maDai":  "khanh-hoa",
+        "ngayQuay":  "2025-01-11T18:00:00",
+        "ketQua":  "34,67,99,97,15,15"
+    },
+    {
+        "id":  12,
+        "maDai":  "khanh-hoa",
+        "ngayQuay":  "2025-01-12T18:00:00",
+        "ketQua":  "82,57,71,50,43,40"
+    },
+    {
+        "id":  13,
+        "maDai":  "khanh-hoa",
+        "ngayQuay":  "2025-01-13T18:00:00",
+        "ketQua":  "81,4,27,0,78,75"
+    },
+    {
+        "id":  14,
+        "maDai":  "khanh-hoa",
+        "ngayQuay":  "2025-01-14T18:00:00",
+        "ketQua":  "47,15,42,49,61,49"
+    },
+    {
+        "id":  15,
+        "maDai":  "khanh-hoa",
+        "ngayQuay":  "2025-01-15T18:00:00",
+        "ketQua":  "28,91,58,16,55,22"
+    },
+    {
+        "id":  16,
+        "maDai":  "khanh-hoa",
+        "ngayQuay":  "2025-01-16T18:00:00",
+        "ketQua":  "40,12,67,21,49,73"
+    },
+    {
+        "id":  17,
+        "maDai":  "khanh-hoa",
+        "ngayQuay":  "2025-01-17T18:00:00",
+        "ketQua":  "7,44,23,5,52,54"
+    },
+    {
+        "id":  18,
+        "maDai":  "khanh-hoa",
+        "ngayQuay":  "2025-01-18T18:00:00",
+        "ketQua":  "57,59,35,48,64,30"
+    },
+    {
+        "id":  19,
+        "maDai":  "khanh-hoa",
+        "ngayQuay":  "2025-01-19T18:00:00",
+        "ketQua":  "35,45,76,84,99,56"
+    },
+    {
+        "id":  20,
+        "maDai":  "khanh-hoa",
+        "ngayQuay":  "2025-01-20T18:00:00",
+        "ketQua":  "33,85,6,49,68,24"
+    },
+    {
+        "id":  21,
+        "maDai":  "khanh-hoa",
+        "ngayQuay":  "2025-01-21T18:00:00",
+        "ketQua":  "57,66,2,49,10,30"
+    },
+    {
+        "id":  22,
+        "maDai":  "khanh-hoa",
+        "ngayQuay":  "2025-01-22T18:00:00",
+        "ketQua":  "72,60,54,53,92,33"
+    },
+    {
+        "id":  23,
+        "maDai":  "khanh-hoa",
+        "ngayQuay":  "2025-01-23T18:00:00",
+        "ketQua":  "51,41,63,88,92,1"
+    },
+    {
+        "id":  24,
+        "maDai":  "khanh-hoa",
+        "ngayQuay":  "2025-01-24T18:00:00",
+        "ketQua":  "14,80,27,28,80,9"
+    },
+    {
+        "id":  25,
+        "maDai":  "khanh-hoa",
+        "ngayQuay":  "2025-01-25T18:00:00",
+        "ketQua":  "46,55,13,11,87,64"
+    },
+    {
+        "id":  26,
+        "maDai":  "khanh-hoa",
+        "ngayQuay":  "2025-01-26T18:00:00",
+        "ketQua":  "67,57,75,99,48,86"
+    },
+    {
+        "id":  27,
+        "maDai":  "khanh-hoa",
+        "ngayQuay":  "2025-01-27T18:00:00",
+        "ketQua":  "52,7,49,4,75,3"
+    },
+    {
+        "id":  28,
+        "maDai":  "khanh-hoa",
+        "ngayQuay":  "2025-01-28T18:00:00",
+        "ketQua":  "75,82,53,42,32,57"
+    },
+    {
+        "id":  29,
+        "maDai":  "khanh-hoa",
+        "ngayQuay":  "2025-01-29T18:00:00",
+        "ketQua":  "92,44,92,4,35,88"
+    },
+    {
+        "id":  30,
+        "maDai":  "khanh-hoa",
+        "ngayQuay":  "2025-01-30T18:00:00",
+        "ketQua":  "97,28,85,92,3,54"
+    },
+    {
+        "id":  31,
+        "maDai":  "khanh-hoa",
+        "ngayQuay":  "2025-01-31T18:00:00",
+        "ketQua":  "17,61,72,90,85,34"
+    },
+    {
+        "id":  32,
+        "maDai":  "khanh-hoa",
+        "ngayQuay":  "2025-02-01T18:00:00",
+        "ketQua":  "57,52,93,77,36,84"
+    },
+    {
+        "id":  33,
+        "maDai":  "khanh-hoa",
+        "ngayQuay":  "2025-02-02T18:00:00",
+        "ketQua":  "51,9,4,23,53,98"
+    },
+    {
+        "id":  34,
+        "maDai":  "khanh-hoa",
+        "ngayQuay":  "2025-02-03T18:00:00",
+        "ketQua":  "56,3,23,55,18,43"
+    },
+    {
+        "id":  35,
+        "maDai":  "khanh-hoa",
+        "ngayQuay":  "2025-02-04T18:00:00",
+        "ketQua":  "71,63,22,87,2,19"
+    },
+    {
+        "id":  36,
+        "maDai":  "khanh-hoa",
+        "ngayQuay":  "2025-02-05T18:00:00",
+        "ketQua":  "0,59,4,95,87,14"
+    },
+    {
+        "id":  37,
+        "maDai":  "khanh-hoa",
+        "ngayQuay":  "2025-02-06T18:00:00",
+        "ketQua":  "31,84,96,18,84,80"
+    },
+    {
+        "id":  38,
+        "maDai":  "khanh-hoa",
+        "ngayQuay":  "2025-02-07T18:00:00",
+        "ketQua":  "63,15,8,8,52,26"
+    },
+    {
+        "id":  39,
+        "maDai":  "khanh-hoa",
+        "ngayQuay":  "2025-02-08T18:00:00",
+        "ketQua":  "84,74,75,87,35,99"
+    },
+    {
+        "id":  40,
+        "maDai":  "khanh-hoa",
+        "ngayQuay":  "2025-02-09T18:00:00",
+        "ketQua":  "30,61,42,29,19,22"
+    }
+]

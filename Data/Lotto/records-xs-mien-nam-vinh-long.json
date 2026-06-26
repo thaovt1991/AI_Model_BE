@@ -1,0 +1,522 @@
+﻿[
+    {
+        "dai":  "Vĩnh Long",
+        "ngayQuay":  "2024-06-01T18:00:00",
+        "kyQuay":  1,
+        "cacSoDaVe":  [
+                          74,
+                          38,
+                          14,
+                          2,
+                          5,
+                          78
+                      ]
+    },
+    {
+        "dai":  "Vĩnh Long",
+        "ngayQuay":  "2024-06-08T18:00:00",
+        "kyQuay":  2,
+        "cacSoDaVe":  [
+                          62,
+                          11,
+                          24,
+                          77,
+                          28,
+                          64
+                      ]
+    },
+    {
+        "dai":  "Vĩnh Long",
+        "ngayQuay":  "2024-06-15T18:00:00",
+        "kyQuay":  3,
+        "cacSoDaVe":  [
+                          14,
+                          4,
+                          60,
+                          51,
+                          5,
+                          42
+                      ]
+    },
+    {
+        "dai":  "Vĩnh Long",
+        "ngayQuay":  "2024-06-22T18:00:00",
+        "kyQuay":  4,
+        "cacSoDaVe":  [
+                          70,
+                          62,
+                          21,
+                          1,
+                          36,
+                          26
+                      ]
+    },
+    {
+        "dai":  "Vĩnh Long",
+        "ngayQuay":  "2024-06-29T18:00:00",
+        "kyQuay":  5,
+        "cacSoDaVe":  [
+                          6,
+                          71,
+                          7,
+                          46,
+                          1,
+                          79
+                      ]
+    },
+    {
+        "dai":  "Vĩnh Long",
+        "ngayQuay":  "2024-07-06T18:00:00",
+        "kyQuay":  6,
+        "cacSoDaVe":  [
+                          43,
+                          51,
+                          49,
+                          0,
+                          82,
+                          1
+                      ]
+    },
+    {
+        "dai":  "Vĩnh Long",
+        "ngayQuay":  "2024-07-13T18:00:00",
+        "kyQuay":  7,
+        "cacSoDaVe":  [
+                          0,
+                          6,
+                          65,
+                          3,
+                          91,
+                          92
+                      ]
+    },
+    {
+        "dai":  "Vĩnh Long",
+        "ngayQuay":  "2024-07-20T18:00:00",
+        "kyQuay":  8,
+        "cacSoDaVe":  [
+                          46,
+                          37,
+                          61,
+                          4,
+                          37,
+                          14
+                      ]
+    },
+    {
+        "dai":  "Vĩnh Long",
+        "ngayQuay":  "2024-07-27T18:00:00",
+        "kyQuay":  9,
+        "cacSoDaVe":  [
+                          43,
+                          79,
+                          53,
+                          40,
+                          29,
+                          90
+                      ]
+    },
+    {
+        "dai":  "Vĩnh Long",
+        "ngayQuay":  "2024-08-03T18:00:00",
+        "kyQuay":  10,
+        "cacSoDaVe":  [
+                          58,
+                          73,
+                          1,
+                          88,
+                          95,
+                          33
+                      ]
+    },
+    {
+        "dai":  "Vĩnh Long",
+        "ngayQuay":  "2024-08-10T18:00:00",
+        "kyQuay":  11,
+        "cacSoDaVe":  [
+                          71,
+                          16,
+                          10,
+                          45,
+                          33,
+                          77
+                      ]
+    },
+    {
+        "dai":  "Vĩnh Long",
+        "ngayQuay":  "2024-08-17T18:00:00",
+        "kyQuay":  12,
+        "cacSoDaVe":  [
+                          14,
+                          13,
+                          21,
+                          59,
+                          51,
+                          98
+                      ]
+    },
+    {
+        "dai":  "Vĩnh Long",
+        "ngayQuay":  "2024-08-24T18:00:00",
+        "kyQuay":  13,
+        "cacSoDaVe":  [
+                          76,
+                          67,
+                          71,
+                          28,
+                          55,
+                          98
+                      ]
+    },
+    {
+        "dai":  "Vĩnh Long",
+        "ngayQuay":  "2024-08-31T18:00:00",
+        "kyQuay":  14,
+        "cacSoDaVe":  [
+                          65,
+                          2,
+                          34,
+                          92,
+                          2,
+                          21
+                      ]
+    },
+    {
+        "dai":  "Vĩnh Long",
+        "ngayQuay":  "2024-09-07T18:00:00",
+        "kyQuay":  15,
+        "cacSoDaVe":  [
+                          26,
+                          3,
+                          21,
+                          59,
+                          42,
+                          9
+                      ]
+    },
+    {
+        "dai":  "Vĩnh Long",
+        "ngayQuay":  "2024-09-14T18:00:00",
+        "kyQuay":  16,
+        "cacSoDaVe":  [
+                          99,
+                          12,
+                          10,
+                          32,
+                          32,
+                          75
+                      ]
+    },
+    {
+        "dai":  "Vĩnh Long",
+        "ngayQuay":  "2024-09-21T18:00:00",
+        "kyQuay":  17,
+        "cacSoDaVe":  [
+                          82,
+                          0,
+                          4,
+                          84,
+                          89,
+                          23
+                      ]
+    },
+    {
+        "dai":  "Vĩnh Long",
+        "ngayQuay":  "2024-09-28T18:00:00",
+        "kyQuay":  18,
+        "cacSoDaVe":  [
+                          92,
+                          84,
+                          27,
+                          54,
+                          63,
+                          62
+                      ]
+    },
+    {
+        "dai":  "Vĩnh Long",
+        "ngayQuay":  "2024-10-05T18:00:00",
+        "kyQuay":  19,
+        "cacSoDaVe":  [
+                          19,
+                          29,
+                          18,
+                          2,
+                          23,
+                          93
+                      ]
+    },
+    {
+        "dai":  "Vĩnh Long",
+        "ngayQuay":  "2024-10-12T18:00:00",
+        "kyQuay":  20,
+        "cacSoDaVe":  [
+                          98,
+                          78,
+                          13,
+                          88,
+                          18,
+                          29
+                      ]
+    },
+    {
+        "dai":  "Vĩnh Long",
+        "ngayQuay":  "2024-10-19T18:00:00",
+        "kyQuay":  21,
+        "cacSoDaVe":  [
+                          55,
+                          55,
+                          71,
+                          12,
+                          59,
+                          39
+                      ]
+    },
+    {
+        "dai":  "Vĩnh Long",
+        "ngayQuay":  "2024-10-26T18:00:00",
+        "kyQuay":  22,
+        "cacSoDaVe":  [
+                          88,
+                          44,
+                          34,
+                          96,
+                          46,
+                          54
+                      ]
+    },
+    {
+        "dai":  "Vĩnh Long",
+        "ngayQuay":  "2024-11-02T18:00:00",
+        "kyQuay":  23,
+        "cacSoDaVe":  [
+                          94,
+                          81,
+                          12,
+                          10,
+                          0,
+                          18
+                      ]
+    },
+    {
+        "dai":  "Vĩnh Long",
+        "ngayQuay":  "2024-11-09T18:00:00",
+        "kyQuay":  24,
+        "cacSoDaVe":  [
+                          94,
+                          72,
+                          40,
+                          59,
+                          40,
+                          12
+                      ]
+    },
+    {
+        "dai":  "Vĩnh Long",
+        "ngayQuay":  "2024-11-16T18:00:00",
+        "kyQuay":  25,
+        "cacSoDaVe":  [
+                          91,
+                          96,
+                          89,
+                          17,
+                          33,
+                          54
+                      ]
+    },
+    {
+        "dai":  "Vĩnh Long",
+        "ngayQuay":  "2024-11-23T18:00:00",
+        "kyQuay":  26,
+        "cacSoDaVe":  [
+                          61,
+                          94,
+                          82,
+                          74,
+                          28,
+                          33
+                      ]
+    },
+    {
+        "dai":  "Vĩnh Long",
+        "ngayQuay":  "2024-11-30T18:00:00",
+        "kyQuay":  27,
+        "cacSoDaVe":  [
+                          52,
+                          80,
+                          24,
+                          88,
+                          66,
+                          18
+                      ]
+    },
+    {
+        "dai":  "Vĩnh Long",
+        "ngayQuay":  "2024-12-07T18:00:00",
+        "kyQuay":  28,
+        "cacSoDaVe":  [
+                          27,
+                          22,
+                          83,
+                          64,
+                          8,
+                          42
+                      ]
+    },
+    {
+        "dai":  "Vĩnh Long",
+        "ngayQuay":  "2024-12-14T18:00:00",
+        "kyQuay":  29,
+        "cacSoDaVe":  [
+                          80,
+                          88,
+                          77,
+                          95,
+                          94,
+                          46
+                      ]
+    },
+    {
+        "dai":  "Vĩnh Long",
+        "ngayQuay":  "2024-12-21T18:00:00",
+        "kyQuay":  30,
+        "cacSoDaVe":  [
+                          89,
+                          96,
+                          15,
+                          58,
+                          21,
+                          63
+                      ]
+    },
+    {
+        "dai":  "Vĩnh Long",
+        "ngayQuay":  "2024-12-28T18:00:00",
+        "kyQuay":  31,
+        "cacSoDaVe":  [
+                          50,
+                          70,
+                          11,
+                          80,
+                          34,
+                          52
+                      ]
+    },
+    {
+        "dai":  "Vĩnh Long",
+        "ngayQuay":  "2025-01-04T18:00:00",
+        "kyQuay":  32,
+        "cacSoDaVe":  [
+                          72,
+                          20,
+                          52,
+                          78,
+                          58,
+                          19
+                      ]
+    },
+    {
+        "dai":  "Vĩnh Long",
+        "ngayQuay":  "2025-01-11T18:00:00",
+        "kyQuay":  33,
+        "cacSoDaVe":  [
+                          93,
+                          5,
+                          5,
+                          21,
+                          31,
+                          17
+                      ]
+    },
+    {
+        "dai":  "Vĩnh Long",
+        "ngayQuay":  "2025-01-18T18:00:00",
+        "kyQuay":  34,
+        "cacSoDaVe":  [
+                          29,
+                          27,
+                          88,
+                          47,
+                          36,
+                          45
+                      ]
+    },
+    {
+        "dai":  "Vĩnh Long",
+        "ngayQuay":  "2025-01-25T18:00:00",
+        "kyQuay":  35,
+        "cacSoDaVe":  [
+                          76,
+                          66,
+                          99,
+                          35,
+                          85,
+                          31
+                      ]
+    },
+    {
+        "dai":  "Vĩnh Long",
+        "ngayQuay":  "2025-02-01T18:00:00",
+        "kyQuay":  36,
+        "cacSoDaVe":  [
+                          18,
+                          93,
+                          59,
+                          61,
+                          38,
+                          95
+                      ]
+    },
+    {
+        "dai":  "Vĩnh Long",
+        "ngayQuay":  "2025-02-08T18:00:00",
+        "kyQuay":  37,
+        "cacSoDaVe":  [
+                          7,
+                          47,
+                          88,
+                          31,
+                          91,
+                          88
+                      ]
+    },
+    {
+        "dai":  "Vĩnh Long",
+        "ngayQuay":  "2025-02-15T18:00:00",
+        "kyQuay":  38,
+        "cacSoDaVe":  [
+                          89,
+                          1,
+                          29,
+                          58,
+                          1,
+                          89
+                      ]
+    },
+    {
+        "dai":  "Vĩnh Long",
+        "ngayQuay":  "2025-02-22T18:00:00",
+        "kyQuay":  39,
+        "cacSoDaVe":  [
+                          41,
+                          67,
+                          65,
+                          98,
+                          29,
+                          94
+                      ]
+    },
+    {
+        "dai":  "Vĩnh Long",
+        "ngayQuay":  "2025-03-01T18:00:00",
+        "kyQuay":  40,
+        "cacSoDaVe":  [
+                          75,
+                          3,
+                          34,
+                          65,
+                          4,
+                          68
+                      ]
+    }
+]

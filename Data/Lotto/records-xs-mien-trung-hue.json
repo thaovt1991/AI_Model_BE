@@ -1,0 +1,522 @@
+﻿[
+    {
+        "dai":  "Thừa Thiên Huế",
+        "ngayQuay":  "2024-06-01T18:00:00",
+        "kyQuay":  1,
+        "cacSoDaVe":  [
+                          82,
+                          75,
+                          99,
+                          47,
+                          31,
+                          3
+                      ]
+    },
+    {
+        "dai":  "Thừa Thiên Huế",
+        "ngayQuay":  "2024-06-08T18:00:00",
+        "kyQuay":  2,
+        "cacSoDaVe":  [
+                          10,
+                          32,
+                          59,
+                          67,
+                          85,
+                          94
+                      ]
+    },
+    {
+        "dai":  "Thừa Thiên Huế",
+        "ngayQuay":  "2024-06-15T18:00:00",
+        "kyQuay":  3,
+        "cacSoDaVe":  [
+                          49,
+                          91,
+                          12,
+                          17,
+                          19,
+                          35
+                      ]
+    },
+    {
+        "dai":  "Thừa Thiên Huế",
+        "ngayQuay":  "2024-06-22T18:00:00",
+        "kyQuay":  4,
+        "cacSoDaVe":  [
+                          35,
+                          3,
+                          58,
+                          67,
+                          25,
+                          8
+                      ]
+    },
+    {
+        "dai":  "Thừa Thiên Huế",
+        "ngayQuay":  "2024-06-29T18:00:00",
+        "kyQuay":  5,
+        "cacSoDaVe":  [
+                          67,
+                          97,
+                          3,
+                          63,
+                          57,
+                          33
+                      ]
+    },
+    {
+        "dai":  "Thừa Thiên Huế",
+        "ngayQuay":  "2024-07-06T18:00:00",
+        "kyQuay":  6,
+        "cacSoDaVe":  [
+                          99,
+                          57,
+                          53,
+                          22,
+                          95,
+                          69
+                      ]
+    },
+    {
+        "dai":  "Thừa Thiên Huế",
+        "ngayQuay":  "2024-07-13T18:00:00",
+        "kyQuay":  7,
+        "cacSoDaVe":  [
+                          1,
+                          41,
+                          44,
+                          0,
+                          4,
+                          3
+                      ]
+    },
+    {
+        "dai":  "Thừa Thiên Huế",
+        "ngayQuay":  "2024-07-20T18:00:00",
+        "kyQuay":  8,
+        "cacSoDaVe":  [
+                          32,
+                          27,
+                          93,
+                          92,
+                          80,
+                          52
+                      ]
+    },
+    {
+        "dai":  "Thừa Thiên Huế",
+        "ngayQuay":  "2024-07-27T18:00:00",
+        "kyQuay":  9,
+        "cacSoDaVe":  [
+                          53,
+                          61,
+                          96,
+                          9,
+                          95,
+                          13
+                      ]
+    },
+    {
+        "dai":  "Thừa Thiên Huế",
+        "ngayQuay":  "2024-08-03T18:00:00",
+        "kyQuay":  10,
+        "cacSoDaVe":  [
+                          15,
+                          14,
+                          49,
+                          91,
+                          79,
+                          34
+                      ]
+    },
+    {
+        "dai":  "Thừa Thiên Huế",
+        "ngayQuay":  "2024-08-10T18:00:00",
+        "kyQuay":  11,
+        "cacSoDaVe":  [
+                          99,
+                          47,
+                          75,
+                          26,
+                          67,
+                          27
+                      ]
+    },
+    {
+        "dai":  "Thừa Thiên Huế",
+        "ngayQuay":  "2024-08-17T18:00:00",
+        "kyQuay":  12,
+        "cacSoDaVe":  [
+                          40,
+                          26,
+                          95,
+                          43,
+                          15,
+                          77
+                      ]
+    },
+    {
+        "dai":  "Thừa Thiên Huế",
+        "ngayQuay":  "2024-08-24T18:00:00",
+        "kyQuay":  13,
+        "cacSoDaVe":  [
+                          90,
+                          35,
+                          98,
+                          54,
+                          35,
+                          97
+                      ]
+    },
+    {
+        "dai":  "Thừa Thiên Huế",
+        "ngayQuay":  "2024-08-31T18:00:00",
+        "kyQuay":  14,
+        "cacSoDaVe":  [
+                          14,
+                          75,
+                          17,
+                          51,
+                          10,
+                          96
+                      ]
+    },
+    {
+        "dai":  "Thừa Thiên Huế",
+        "ngayQuay":  "2024-09-07T18:00:00",
+        "kyQuay":  15,
+        "cacSoDaVe":  [
+                          36,
+                          89,
+                          62,
+                          40,
+                          6,
+                          80
+                      ]
+    },
+    {
+        "dai":  "Thừa Thiên Huế",
+        "ngayQuay":  "2024-09-14T18:00:00",
+        "kyQuay":  16,
+        "cacSoDaVe":  [
+                          19,
+                          10,
+                          62,
+                          10,
+                          0,
+                          57
+                      ]
+    },
+    {
+        "dai":  "Thừa Thiên Huế",
+        "ngayQuay":  "2024-09-21T18:00:00",
+        "kyQuay":  17,
+        "cacSoDaVe":  [
+                          28,
+                          6,
+                          59,
+                          65,
+                          51,
+                          53
+                      ]
+    },
+    {
+        "dai":  "Thừa Thiên Huế",
+        "ngayQuay":  "2024-09-28T18:00:00",
+        "kyQuay":  18,
+        "cacSoDaVe":  [
+                          56,
+                          9,
+                          45,
+                          18,
+                          19,
+                          59
+                      ]
+    },
+    {
+        "dai":  "Thừa Thiên Huế",
+        "ngayQuay":  "2024-10-05T18:00:00",
+        "kyQuay":  19,
+        "cacSoDaVe":  [
+                          14,
+                          60,
+                          79,
+                          51,
+                          76,
+                          3
+                      ]
+    },
+    {
+        "dai":  "Thừa Thiên Huế",
+        "ngayQuay":  "2024-10-12T18:00:00",
+        "kyQuay":  20,
+        "cacSoDaVe":  [
+                          17,
+                          48,
+                          37,
+                          79,
+                          89,
+                          78
+                      ]
+    },
+    {
+        "dai":  "Thừa Thiên Huế",
+        "ngayQuay":  "2024-10-19T18:00:00",
+        "kyQuay":  21,
+        "cacSoDaVe":  [
+                          65,
+                          0,
+                          20,
+                          14,
+                          24,
+                          5
+                      ]
+    },
+    {
+        "dai":  "Thừa Thiên Huế",
+        "ngayQuay":  "2024-10-26T18:00:00",
+        "kyQuay":  22,
+        "cacSoDaVe":  [
+                          15,
+                          80,
+                          35,
+                          41,
+                          26,
+                          29
+                      ]
+    },
+    {
+        "dai":  "Thừa Thiên Huế",
+        "ngayQuay":  "2024-11-02T18:00:00",
+        "kyQuay":  23,
+        "cacSoDaVe":  [
+                          37,
+                          49,
+                          23,
+                          63,
+                          94,
+                          0
+                      ]
+    },
+    {
+        "dai":  "Thừa Thiên Huế",
+        "ngayQuay":  "2024-11-09T18:00:00",
+        "kyQuay":  24,
+        "cacSoDaVe":  [
+                          50,
+                          18,
+                          69,
+                          2,
+                          26,
+                          45
+                      ]
+    },
+    {
+        "dai":  "Thừa Thiên Huế",
+        "ngayQuay":  "2024-11-16T18:00:00",
+        "kyQuay":  25,
+        "cacSoDaVe":  [
+                          1,
+                          67,
+                          33,
+                          58,
+                          92,
+                          51
+                      ]
+    },
+    {
+        "dai":  "Thừa Thiên Huế",
+        "ngayQuay":  "2024-11-23T18:00:00",
+        "kyQuay":  26,
+        "cacSoDaVe":  [
+                          19,
+                          49,
+                          16,
+                          81,
+                          0,
+                          51
+                      ]
+    },
+    {
+        "dai":  "Thừa Thiên Huế",
+        "ngayQuay":  "2024-11-30T18:00:00",
+        "kyQuay":  27,
+        "cacSoDaVe":  [
+                          33,
+                          42,
+                          84,
+                          39,
+                          2,
+                          39
+                      ]
+    },
+    {
+        "dai":  "Thừa Thiên Huế",
+        "ngayQuay":  "2024-12-07T18:00:00",
+        "kyQuay":  28,
+        "cacSoDaVe":  [
+                          24,
+                          72,
+                          34,
+                          50,
+                          13,
+                          27
+                      ]
+    },
+    {
+        "dai":  "Thừa Thiên Huế",
+        "ngayQuay":  "2024-12-14T18:00:00",
+        "kyQuay":  29,
+        "cacSoDaVe":  [
+                          80,
+                          54,
+                          54,
+                          36,
+                          28,
+                          71
+                      ]
+    },
+    {
+        "dai":  "Thừa Thiên Huế",
+        "ngayQuay":  "2024-12-21T18:00:00",
+        "kyQuay":  30,
+        "cacSoDaVe":  [
+                          8,
+                          62,
+                          74,
+                          74,
+                          13,
+                          57
+                      ]
+    },
+    {
+        "dai":  "Thừa Thiên Huế",
+        "ngayQuay":  "2024-12-28T18:00:00",
+        "kyQuay":  31,
+        "cacSoDaVe":  [
+                          72,
+                          57,
+                          87,
+                          83,
+                          21,
+                          77
+                      ]
+    },
+    {
+        "dai":  "Thừa Thiên Huế",
+        "ngayQuay":  "2025-01-04T18:00:00",
+        "kyQuay":  32,
+        "cacSoDaVe":  [
+                          12,
+                          56,
+                          49,
+                          72,
+                          30,
+                          51
+                      ]
+    },
+    {
+        "dai":  "Thừa Thiên Huế",
+        "ngayQuay":  "2025-01-11T18:00:00",
+        "kyQuay":  33,
+        "cacSoDaVe":  [
+                          15,
+                          10,
+                          15,
+                          30,
+                          77,
+                          53
+                      ]
+    },
+    {
+        "dai":  "Thừa Thiên Huế",
+        "ngayQuay":  "2025-01-18T18:00:00",
+        "kyQuay":  34,
+        "cacSoDaVe":  [
+                          11,
+                          50,
+                          53,
+                          5,
+                          78,
+                          38
+                      ]
+    },
+    {
+        "dai":  "Thừa Thiên Huế",
+        "ngayQuay":  "2025-01-25T18:00:00",
+        "kyQuay":  35,
+        "cacSoDaVe":  [
+                          97,
+                          82,
+                          20,
+                          44,
+                          72,
+                          37
+                      ]
+    },
+    {
+        "dai":  "Thừa Thiên Huế",
+        "ngayQuay":  "2025-02-01T18:00:00",
+        "kyQuay":  36,
+        "cacSoDaVe":  [
+                          76,
+                          59,
+                          28,
+                          27,
+                          67,
+                          45
+                      ]
+    },
+    {
+        "dai":  "Thừa Thiên Huế",
+        "ngayQuay":  "2025-02-08T18:00:00",
+        "kyQuay":  37,
+        "cacSoDaVe":  [
+                          52,
+                          41,
+                          50,
+                          57,
+                          37,
+                          57
+                      ]
+    },
+    {
+        "dai":  "Thừa Thiên Huế",
+        "ngayQuay":  "2025-02-15T18:00:00",
+        "kyQuay":  38,
+        "cacSoDaVe":  [
+                          78,
+                          7,
+                          23,
+                          2,
+                          21,
+                          18
+                      ]
+    },
+    {
+        "dai":  "Thừa Thiên Huế",
+        "ngayQuay":  "2025-02-22T18:00:00",
+        "kyQuay":  39,
+        "cacSoDaVe":  [
+                          55,
+                          78,
+                          84,
+                          21,
+                          62,
+                          63
+                      ]
+    },
+    {
+        "dai":  "Thừa Thiên Huế",
+        "ngayQuay":  "2025-03-01T18:00:00",
+        "kyQuay":  40,
+        "cacSoDaVe":  [
+                          3,
+                          66,
+                          79,
+                          49,
+                          85,
+                          39
+                      ]
+    }
+]

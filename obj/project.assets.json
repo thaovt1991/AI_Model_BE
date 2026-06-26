@@ -47,6 +47,19 @@
           }
         }
       },
+      "HtmlAgilityPack/1.11.72": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/HtmlAgilityPack.dll": {
+            "related": ".deps.json;.pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/HtmlAgilityPack.dll": {
+            "related": ".deps.json;.pdb;.xml"
+          }
+        }
+      },
       "LLamaSharp/0.27.0": {
         "type": "package",
         "dependencies": {
@@ -351,6 +364,95 @@
         },
         "runtime": {
           "lib/netstandard2.0/Microsoft.ML.DataView.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.ML.Mkl.Redist/5.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/_._": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/_._": {}
+        },
+        "build": {
+          "build/netstandard2.0/_._": {}
+        },
+        "runtimeTargets": {
+          "runtimes/linux-x64/native/libMklImports.so": {
+            "assetType": "native",
+            "rid": "linux-x64"
+          },
+          "runtimes/linux-x64/native/libMklProxyNative.so": {
+            "assetType": "native",
+            "rid": "linux-x64"
+          },
+          "runtimes/linux-x64/native/libMklProxyNative.so.dbg": {
+            "assetType": "native",
+            "rid": "linux-x64"
+          },
+          "runtimes/osx-x64/native/libMklImports.dylib": {
+            "assetType": "native",
+            "rid": "osx-x64"
+          },
+          "runtimes/osx-x64/native/libMklProxyNative.dylib": {
+            "assetType": "native",
+            "rid": "osx-x64"
+          },
+          "runtimes/osx-x64/native/libMklProxyNative.dylib.dwarf": {
+            "assetType": "native",
+            "rid": "osx-x64"
+          },
+          "runtimes/win-x64/native/MklImports.dll": {
+            "assetType": "native",
+            "rid": "win-x64"
+          },
+          "runtimes/win-x64/native/MklProxyNative.dll": {
+            "assetType": "native",
+            "rid": "win-x64"
+          },
+          "runtimes/win-x64/native/libiomp5md.dll": {
+            "assetType": "native",
+            "rid": "win-x64"
+          },
+          "runtimes/win-x86/native/MklImports.dll": {
+            "assetType": "native",
+            "rid": "win-x86"
+          },
+          "runtimes/win-x86/native/MklProxyNative.dll": {
+            "assetType": "native",
+            "rid": "win-x86"
+          },
+          "runtimes/win-x86/native/libiomp5md.dll": {
+            "assetType": "native",
+            "rid": "win-x86"
+          }
+        }
+      },
+      "Microsoft.ML.TimeSeries/5.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Bcl.AsyncInterfaces": "9.0.4",
+          "Microsoft.ML": "5.0.0",
+          "Microsoft.ML.Mkl.Redist": "5.0.0",
+          "Newtonsoft.Json": "13.0.3",
+          "System.Buffers": "4.6.1",
+          "System.CodeDom": "9.0.4",
+          "System.Collections.Immutable": "9.0.4",
+          "System.Memory": "4.6.3",
+          "System.Numerics.Tensors": "9.0.4",
+          "System.Reflection.Emit.Lightweight": "4.7.0",
+          "System.Runtime.CompilerServices.Unsafe": "6.1.2",
+          "System.Threading.Channels": "9.0.4"
+        },
+        "compile": {
+          "lib/netstandard2.0/Microsoft.ML.TimeSeries.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.ML.TimeSeries.dll": {
             "related": ".xml"
           }
         }
@@ -852,6 +954,55 @@
         "lib/net8.0/DocumentFormat.OpenXml.Framework.xml",
         "lib/netstandard2.0/DocumentFormat.OpenXml.Framework.dll",
         "lib/netstandard2.0/DocumentFormat.OpenXml.Framework.xml"
+      ]
+    },
+    "HtmlAgilityPack/1.11.72": {
+      "sha512": "RNLgXxTFdIGFI+o5l8c2aJ2L5StIRn9Uv8HKR76p7QP4ZUL26wzpWUCWh08xWUdkL2kocl+Xhv6VUu0rA1npVg==",
+      "type": "package",
+      "path": "htmlagilitypack/1.11.72",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "htmlagilitypack.1.11.72.nupkg.sha512",
+        "htmlagilitypack.nuspec",
+        "lib/Net35/HtmlAgilityPack.dll",
+        "lib/Net35/HtmlAgilityPack.pdb",
+        "lib/Net35/HtmlAgilityPack.xml",
+        "lib/Net40-client/HtmlAgilityPack.dll",
+        "lib/Net40-client/HtmlAgilityPack.pdb",
+        "lib/Net40-client/HtmlAgilityPack.xml",
+        "lib/Net40/HtmlAgilityPack.XML",
+        "lib/Net40/HtmlAgilityPack.dll",
+        "lib/Net40/HtmlAgilityPack.pdb",
+        "lib/Net45/HtmlAgilityPack.XML",
+        "lib/Net45/HtmlAgilityPack.dll",
+        "lib/Net45/HtmlAgilityPack.pdb",
+        "lib/NetCore45/HtmlAgilityPack.XML",
+        "lib/NetCore45/HtmlAgilityPack.dll",
+        "lib/NetCore45/HtmlAgilityPack.pdb",
+        "lib/netstandard1.3/HtmlAgilityPack.deps.json",
+        "lib/netstandard1.3/HtmlAgilityPack.dll",
+        "lib/netstandard1.3/HtmlAgilityPack.pdb",
+        "lib/netstandard1.3/HtmlAgilityPack.xml",
+        "lib/netstandard1.6/HtmlAgilityPack.deps.json",
+        "lib/netstandard1.6/HtmlAgilityPack.dll",
+        "lib/netstandard1.6/HtmlAgilityPack.pdb",
+        "lib/netstandard1.6/HtmlAgilityPack.xml",
+        "lib/netstandard2.0/HtmlAgilityPack.deps.json",
+        "lib/netstandard2.0/HtmlAgilityPack.dll",
+        "lib/netstandard2.0/HtmlAgilityPack.pdb",
+        "lib/netstandard2.0/HtmlAgilityPack.xml",
+        "lib/portable-net45+netcore45+wp8+MonoAndroid+MonoTouch/HtmlAgilityPack.XML",
+        "lib/portable-net45+netcore45+wp8+MonoAndroid+MonoTouch/HtmlAgilityPack.dll",
+        "lib/portable-net45+netcore45+wp8+MonoAndroid+MonoTouch/HtmlAgilityPack.pdb",
+        "lib/portable-net45+netcore45+wpa81+wp8+MonoAndroid+MonoTouch/HtmlAgilityPack.XML",
+        "lib/portable-net45+netcore45+wpa81+wp8+MonoAndroid+MonoTouch/HtmlAgilityPack.dll",
+        "lib/portable-net45+netcore45+wpa81+wp8+MonoAndroid+MonoTouch/HtmlAgilityPack.pdb",
+        "lib/uap10.0/HtmlAgilityPack.XML",
+        "lib/uap10.0/HtmlAgilityPack.dll",
+        "lib/uap10.0/HtmlAgilityPack.pdb",
+        "lib/uap10.0/HtmlAgilityPack.pri",
+        "readme.md"
       ]
     },
     "LLamaSharp/0.27.0": {
@@ -1471,6 +1622,49 @@
         "lib/netstandard2.0/Microsoft.ML.DataView.xml",
         "microsoft.ml.dataview.5.0.0.nupkg.sha512",
         "microsoft.ml.dataview.nuspec",
+        "mlnetlogo.png"
+      ]
+    },
+    "Microsoft.ML.Mkl.Redist/5.0.0": {
+      "sha512": "2ml+nLekvALAkyxeJMx2VEme5KZqfwBAQ5YnjXhTPv+LbKsbpJLYbzlIT5HGIDaBkV6H2OOek9f3gWpfgZPaMg==",
+      "type": "package",
+      "path": "microsoft.ml.mkl.redist/5.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.txt",
+        "build/netstandard2.0/Microsoft.ML.Mkl.Redist.props",
+        "lib/netstandard2.0/_._",
+        "microsoft.ml.mkl.redist.5.0.0.nupkg.sha512",
+        "microsoft.ml.mkl.redist.nuspec",
+        "mlnetlogo.png",
+        "runtimes/linux-x64/native/libMklImports.so",
+        "runtimes/linux-x64/native/libMklProxyNative.so",
+        "runtimes/linux-x64/native/libMklProxyNative.so.dbg",
+        "runtimes/osx-x64/native/libMklImports.dylib",
+        "runtimes/osx-x64/native/libMklProxyNative.dylib",
+        "runtimes/osx-x64/native/libMklProxyNative.dylib.dwarf",
+        "runtimes/win-x64/native/MklImports.dll",
+        "runtimes/win-x64/native/MklProxyNative.dll",
+        "runtimes/win-x64/native/libiomp5md.dll",
+        "runtimes/win-x86/native/MklImports.dll",
+        "runtimes/win-x86/native/MklProxyNative.dll",
+        "runtimes/win-x86/native/libiomp5md.dll"
+      ]
+    },
+    "Microsoft.ML.TimeSeries/5.0.0": {
+      "sha512": "tDk3a+Ju1GZrV/1Z6/3smAqeP+eISKie18PxVFZk3/KypQOoCGLjb71RoceN5MAM2NKGnzi2u3yCMWjDQmM3jw==",
+      "type": "package",
+      "path": "microsoft.ml.timeseries/5.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/netstandard2.0/Microsoft.ML.TimeSeries.dll",
+        "lib/netstandard2.0/Microsoft.ML.TimeSeries.xml",
+        "microsoft.ml.timeseries.5.0.0.nupkg.sha512",
+        "microsoft.ml.timeseries.nuspec",
         "mlnetlogo.png"
       ]
     },
@@ -2281,9 +2475,11 @@
   "projectFileDependencyGroups": {
     "net8.0": [
       "DocumentFormat.OpenXml >= 3.5.1",
+      "HtmlAgilityPack >= 1.11.72",
       "LLamaSharp >= 0.27.0",
       "LLamaSharp.Backend.Cpu >= 0.27.0",
       "Microsoft.ML >= 5.0.0",
+      "Microsoft.ML.TimeSeries >= 5.0.0",
       "Swashbuckle.AspNetCore >= 7.2.0",
       "UglyToad.PdfPig >= 1.7.0-custom-5"
     ]
@@ -2344,6 +2540,10 @@
             "target": "Package",
             "version": "[3.5.1, )"
           },
+          "HtmlAgilityPack": {
+            "target": "Package",
+            "version": "[1.11.72, )"
+          },
           "LLamaSharp": {
             "target": "Package",
             "version": "[0.27.0, )"
@@ -2353,6 +2553,10 @@
             "version": "[0.27.0, )"
           },
           "Microsoft.ML": {
+            "target": "Package",
+            "version": "[5.0.0, )"
+          },
+          "Microsoft.ML.TimeSeries": {
             "target": "Package",
             "version": "[5.0.0, )"
           },

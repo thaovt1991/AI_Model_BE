@@ -24,6 +24,7 @@ public sealed class LlamaChatService : IDisposable
     // _modelLearning: biết đường dẫn adapter .gguf sau khi train xong
     private readonly LearningDataCollectorService _learningCollector;
     private readonly ModelLearningService _modelLearning;
+    private readonly LottoChatIntentService _lottoChat;
     private readonly SemaphoreSlim _semaphore = new(1, 1);
 
     private LLamaWeights? _weights;
@@ -42,6 +43,7 @@ public sealed class LlamaChatService : IDisposable
         ChatProfileSettingsService profileSettings,
         LearningDataCollectorService learningCollector,
         ModelLearningService modelLearning,
+        LottoChatIntentService lottoChat,
         ILogger<LlamaChatService> logger)
     {
         _configuration = configuration;
@@ -50,6 +52,7 @@ public sealed class LlamaChatService : IDisposable
         _profileSettings = profileSettings;
         _learningCollector = learningCollector;
         _modelLearning = modelLearning;
+        _lottoChat = lottoChat;
         _logger = logger;
     }
 
@@ -99,6 +102,15 @@ public sealed class LlamaChatService : IDisposable
 
         var userMessage = message.Trim();
         var history = _chatMemory.GetHistoryForPrompt(profileId, conversationId);
+
+        var lottoReply = await _lottoChat.TryBuildReplyAsync(userMessage, cancellationToken);
+        if (lottoReply is not null)
+        {
+            RememberTurn(profileId, conversationId, userMessage, lottoReply);
+            return new ChatResponse(
+                lottoReply,
+                HistoryTurns: _chatMemory.GetHistoryForPrompt(profileId, conversationId).Count);
+        }
 
         await EnsureInitializedAsync(cancellationToken);
 
@@ -165,6 +177,14 @@ public sealed class LlamaChatService : IDisposable
 
         var userMessage = message.Trim();
         var history = _chatMemory.GetHistoryForPrompt(profileId, conversationId);
+
+        var lottoReply = await _lottoChat.TryBuildReplyAsync(userMessage, cancellationToken);
+        if (lottoReply is not null)
+        {
+            RememberTurn(profileId, conversationId, userMessage, lottoReply);
+            yield return lottoReply;
+            yield break;
+        }
 
         await EnsureInitializedAsync(cancellationToken);
 
@@ -346,6 +366,11 @@ public sealed class LlamaChatService : IDisposable
             systemPrompt += " Nhớ ngữ cảnh các lượt hội thoại trước trong phiên này để trả lời nhất quán.";
         }
 
+        if (_lottoChat.IsLottoRelated(userMessage))
+        {
+            systemPrompt += " Người dùng có thể hỏi xổ số — gợi ý họ dùng câu như: \"Dự đoán XSMB\", \"Lô gan TP HCM\", \"Lịch sử miền Nam 7 ngày\".";
+        }
+
         var userContent = string.IsNullOrWhiteSpace(documentContext)
             ? userMessage
             : $"{documentContext}\n\nCâu hỏi: {userMessage}";
@@ -480,7 +505,7 @@ public sealed class LlamaChatService : IDisposable
 
         return $"[Chế độ mock — chưa có file .gguf]\n" +
                $"Bạn hỏi: \"{message}\"\n" +
-               "Hãy đặt file model vào thư mục Models/ và cập nhật Llama:ModelPath trong appsettings.json.";
+               "Hãy đặt file model vào thư mục Models/ hoặc hỏi xổ số: \"Dự đoán XSMB\", \"Lô gan TP HCM\", \"Lịch sử miền Nam 7 ngày\".";
     }
 
     public void Dispose()

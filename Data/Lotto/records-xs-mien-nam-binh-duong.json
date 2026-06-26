@@ -1,0 +1,522 @@
+﻿[
+    {
+        "dai":  "Bình Dương",
+        "ngayQuay":  "2024-06-01T18:00:00",
+        "kyQuay":  1,
+        "cacSoDaVe":  [
+                          11,
+                          31,
+                          86,
+                          36,
+                          3,
+                          67
+                      ]
+    },
+    {
+        "dai":  "Bình Dương",
+        "ngayQuay":  "2024-06-08T18:00:00",
+        "kyQuay":  2,
+        "cacSoDaVe":  [
+                          21,
+                          27,
+                          66,
+                          15,
+                          71,
+                          66
+                      ]
+    },
+    {
+        "dai":  "Bình Dương",
+        "ngayQuay":  "2024-06-15T18:00:00",
+        "kyQuay":  3,
+        "cacSoDaVe":  [
+                          61,
+                          70,
+                          11,
+                          69,
+                          35,
+                          42
+                      ]
+    },
+    {
+        "dai":  "Bình Dương",
+        "ngayQuay":  "2024-06-22T18:00:00",
+        "kyQuay":  4,
+        "cacSoDaVe":  [
+                          84,
+                          47,
+                          66,
+                          74,
+                          24,
+                          82
+                      ]
+    },
+    {
+        "dai":  "Bình Dương",
+        "ngayQuay":  "2024-06-29T18:00:00",
+        "kyQuay":  5,
+        "cacSoDaVe":  [
+                          13,
+                          68,
+                          59,
+                          50,
+                          8,
+                          82
+                      ]
+    },
+    {
+        "dai":  "Bình Dương",
+        "ngayQuay":  "2024-07-06T18:00:00",
+        "kyQuay":  6,
+        "cacSoDaVe":  [
+                          15,
+                          18,
+                          96,
+                          52,
+                          49,
+                          67
+                      ]
+    },
+    {
+        "dai":  "Bình Dương",
+        "ngayQuay":  "2024-07-13T18:00:00",
+        "kyQuay":  7,
+        "cacSoDaVe":  [
+                          44,
+                          99,
+                          27,
+                          19,
+                          31,
+                          60
+                      ]
+    },
+    {
+        "dai":  "Bình Dương",
+        "ngayQuay":  "2024-07-20T18:00:00",
+        "kyQuay":  8,
+        "cacSoDaVe":  [
+                          29,
+                          41,
+                          38,
+                          37,
+                          15,
+                          6
+                      ]
+    },
+    {
+        "dai":  "Bình Dương",
+        "ngayQuay":  "2024-07-27T18:00:00",
+        "kyQuay":  9,
+        "cacSoDaVe":  [
+                          59,
+                          4,
+                          85,
+                          50,
+                          38,
+                          31
+                      ]
+    },
+    {
+        "dai":  "Bình Dương",
+        "ngayQuay":  "2024-08-03T18:00:00",
+        "kyQuay":  10,
+        "cacSoDaVe":  [
+                          84,
+                          36,
+                          6,
+                          4,
+                          23,
+                          35
+                      ]
+    },
+    {
+        "dai":  "Bình Dương",
+        "ngayQuay":  "2024-08-10T18:00:00",
+        "kyQuay":  11,
+        "cacSoDaVe":  [
+                          8,
+                          70,
+                          18,
+                          84,
+                          99,
+                          53
+                      ]
+    },
+    {
+        "dai":  "Bình Dương",
+        "ngayQuay":  "2024-08-17T18:00:00",
+        "kyQuay":  12,
+        "cacSoDaVe":  [
+                          69,
+                          9,
+                          20,
+                          44,
+                          25,
+                          35
+                      ]
+    },
+    {
+        "dai":  "Bình Dương",
+        "ngayQuay":  "2024-08-24T18:00:00",
+        "kyQuay":  13,
+        "cacSoDaVe":  [
+                          14,
+                          65,
+                          16,
+                          6,
+                          45,
+                          82
+                      ]
+    },
+    {
+        "dai":  "Bình Dương",
+        "ngayQuay":  "2024-08-31T18:00:00",
+        "kyQuay":  14,
+        "cacSoDaVe":  [
+                          43,
+                          75,
+                          52,
+                          52,
+                          91,
+                          4
+                      ]
+    },
+    {
+        "dai":  "Bình Dương",
+        "ngayQuay":  "2024-09-07T18:00:00",
+        "kyQuay":  15,
+        "cacSoDaVe":  [
+                          97,
+                          65,
+                          80,
+                          65,
+                          68,
+                          13
+                      ]
+    },
+    {
+        "dai":  "Bình Dương",
+        "ngayQuay":  "2024-09-14T18:00:00",
+        "kyQuay":  16,
+        "cacSoDaVe":  [
+                          60,
+                          40,
+                          76,
+                          92,
+                          11,
+                          60
+                      ]
+    },
+    {
+        "dai":  "Bình Dương",
+        "ngayQuay":  "2024-09-21T18:00:00",
+        "kyQuay":  17,
+        "cacSoDaVe":  [
+                          41,
+                          45,
+                          41,
+                          85,
+                          68,
+                          6
+                      ]
+    },
+    {
+        "dai":  "Bình Dương",
+        "ngayQuay":  "2024-09-28T18:00:00",
+        "kyQuay":  18,
+        "cacSoDaVe":  [
+                          85,
+                          14,
+                          79,
+                          49,
+                          36,
+                          73
+                      ]
+    },
+    {
+        "dai":  "Bình Dương",
+        "ngayQuay":  "2024-10-05T18:00:00",
+        "kyQuay":  19,
+        "cacSoDaVe":  [
+                          14,
+                          78,
+                          90,
+                          24,
+                          60,
+                          47
+                      ]
+    },
+    {
+        "dai":  "Bình Dương",
+        "ngayQuay":  "2024-10-12T18:00:00",
+        "kyQuay":  20,
+        "cacSoDaVe":  [
+                          82,
+                          55,
+                          79,
+                          14,
+                          86,
+                          34
+                      ]
+    },
+    {
+        "dai":  "Bình Dương",
+        "ngayQuay":  "2024-10-19T18:00:00",
+        "kyQuay":  21,
+        "cacSoDaVe":  [
+                          73,
+                          3,
+                          40,
+                          6,
+                          84,
+                          85
+                      ]
+    },
+    {
+        "dai":  "Bình Dương",
+        "ngayQuay":  "2024-10-26T18:00:00",
+        "kyQuay":  22,
+        "cacSoDaVe":  [
+                          58,
+                          22,
+                          54,
+                          55,
+                          64,
+                          0
+                      ]
+    },
+    {
+        "dai":  "Bình Dương",
+        "ngayQuay":  "2024-11-02T18:00:00",
+        "kyQuay":  23,
+        "cacSoDaVe":  [
+                          41,
+                          58,
+                          7,
+                          46,
+                          67,
+                          76
+                      ]
+    },
+    {
+        "dai":  "Bình Dương",
+        "ngayQuay":  "2024-11-09T18:00:00",
+        "kyQuay":  24,
+        "cacSoDaVe":  [
+                          25,
+                          47,
+                          29,
+                          7,
+                          51,
+                          90
+                      ]
+    },
+    {
+        "dai":  "Bình Dương",
+        "ngayQuay":  "2024-11-16T18:00:00",
+        "kyQuay":  25,
+        "cacSoDaVe":  [
+                          23,
+                          35,
+                          79,
+                          29,
+                          9,
+                          55
+                      ]
+    },
+    {
+        "dai":  "Bình Dương",
+        "ngayQuay":  "2024-11-23T18:00:00",
+        "kyQuay":  26,
+        "cacSoDaVe":  [
+                          80,
+                          27,
+                          58,
+                          7,
+                          11,
+                          64
+                      ]
+    },
+    {
+        "dai":  "Bình Dương",
+        "ngayQuay":  "2024-11-30T18:00:00",
+        "kyQuay":  27,
+        "cacSoDaVe":  [
+                          65,
+                          78,
+                          30,
+                          93,
+                          91,
+                          13
+                      ]
+    },
+    {
+        "dai":  "Bình Dương",
+        "ngayQuay":  "2024-12-07T18:00:00",
+        "kyQuay":  28,
+        "cacSoDaVe":  [
+                          18,
+                          59,
+                          13,
+                          89,
+                          83,
+                          2
+                      ]
+    },
+    {
+        "dai":  "Bình Dương",
+        "ngayQuay":  "2024-12-14T18:00:00",
+        "kyQuay":  29,
+        "cacSoDaVe":  [
+                          39,
+                          36,
+                          88,
+                          2,
+                          89,
+                          38
+                      ]
+    },
+    {
+        "dai":  "Bình Dương",
+        "ngayQuay":  "2024-12-21T18:00:00",
+        "kyQuay":  30,
+        "cacSoDaVe":  [
+                          5,
+                          66,
+                          52,
+                          50,
+                          83,
+                          48
+                      ]
+    },
+    {
+        "dai":  "Bình Dương",
+        "ngayQuay":  "2024-12-28T18:00:00",
+        "kyQuay":  31,
+        "cacSoDaVe":  [
+                          5,
+                          29,
+                          12,
+                          98,
+                          74,
+                          37
+                      ]
+    },
+    {
+        "dai":  "Bình Dương",
+        "ngayQuay":  "2025-01-04T18:00:00",
+        "kyQuay":  32,
+        "cacSoDaVe":  [
+                          42,
+                          33,
+                          46,
+                          43,
+                          80,
+                          88
+                      ]
+    },
+    {
+        "dai":  "Bình Dương",
+        "ngayQuay":  "2025-01-11T18:00:00",
+        "kyQuay":  33,
+        "cacSoDaVe":  [
+                          46,
+                          31,
+                          56,
+                          15,
+                          88,
+                          92
+                      ]
+    },
+    {
+        "dai":  "Bình Dương",
+        "ngayQuay":  "2025-01-18T18:00:00",
+        "kyQuay":  34,
+        "cacSoDaVe":  [
+                          76,
+                          34,
+                          52,
+                          76,
+                          89,
+                          73
+                      ]
+    },
+    {
+        "dai":  "Bình Dương",
+        "ngayQuay":  "2025-01-25T18:00:00",
+        "kyQuay":  35,
+        "cacSoDaVe":  [
+                          67,
+                          78,
+                          38,
+                          20,
+                          1,
+                          45
+                      ]
+    },
+    {
+        "dai":  "Bình Dương",
+        "ngayQuay":  "2025-02-01T18:00:00",
+        "kyQuay":  36,
+        "cacSoDaVe":  [
+                          12,
+                          15,
+                          95,
+                          81,
+                          87,
+                          61
+                      ]
+    },
+    {
+        "dai":  "Bình Dương",
+        "ngayQuay":  "2025-02-08T18:00:00",
+        "kyQuay":  37,
+        "cacSoDaVe":  [
+                          1,
+                          20,
+                          84,
+                          76,
+                          46,
+                          49
+                      ]
+    },
+    {
+        "dai":  "Bình Dương",
+        "ngayQuay":  "2025-02-15T18:00:00",
+        "kyQuay":  38,
+        "cacSoDaVe":  [
+                          55,
+                          96,
+                          55,
+                          0,
+                          56,
+                          58
+                      ]
+    },
+    {
+        "dai":  "Bình Dương",
+        "ngayQuay":  "2025-02-22T18:00:00",
+        "kyQuay":  39,
+        "cacSoDaVe":  [
+                          81,
+                          89,
+                          78,
+                          60,
+                          73,
+                          49
+                      ]
+    },
+    {
+        "dai":  "Bình Dương",
+        "ngayQuay":  "2025-03-01T18:00:00",
+        "kyQuay":  40,
+        "cacSoDaVe":  [
+                          95,
+                          29,
+                          39,
+                          38,
+                          31,
+                          96
+                      ]
+    }
+]

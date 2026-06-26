@@ -1,0 +1,242 @@
+﻿[
+    {
+        "id":  1,
+        "maDai":  "quang-nam",
+        "ngayQuay":  "2025-01-01T18:00:00",
+        "ketQua":  "41,96,77,96,23,85"
+    },
+    {
+        "id":  2,
+        "maDai":  "quang-nam",
+        "ngayQuay":  "2025-01-02T18:00:00",
+        "ketQua":  "1,84,23,16,27,58"
+    },
+    {
+        "id":  3,
+        "maDai":  "quang-nam",
+        "ngayQuay":  "2025-01-03T18:00:00",
+        "ketQua":  "86,10,94,65,32,71"
+    },
+    {
+        "id":  4,
+        "maDai":  "quang-nam",
+        "ngayQuay":  "2025-01-04T18:00:00",
+        "ketQua":  "91,73,22,91,30,98"
+    },
+    {
+        "id":  5,
+        "maDai":  "quang-nam",
+        "ngayQuay":  "2025-01-05T18:00:00",
+        "ketQua":  "33,39,73,83,28,47"
+    },
+    {
+        "id":  6,
+        "maDai":  "quang-nam",
+        "ngayQuay":  "2025-01-06T18:00:00",
+        "ketQua":  "77,68,13,76,27,31"
+    },
+    {
+        "id":  7,
+        "maDai":  "quang-nam",
+        "ngayQuay":  "2025-01-07T18:00:00",
+        "ketQua":  "13,83,11,99,17,89"
+    },
+    {
+        "id":  8,
+        "maDai":  "quang-nam",
+        "ngayQuay":  "2025-01-08T18:00:00",
+        "ketQua":  "62,71,34,53,75,9"
+    },
+    {
+        "id":  9,
+        "maDai":  "quang-nam",
+        "ngayQuay":  "2025-01-09T18:00:00",
+        "ketQua":  "63,51,24,98,79,6"
+    },
+    {
+        "id":  10,
+        "maDai":  "quang-nam",
+        "ngayQuay":  "2025-01-10T18:00:00",
+        "ketQua":  "60,49,66,78,62,83"
+    },
+    {
+        "id":  11,
+        "maDai":  "quang-nam",
+        "ngayQuay":  "2025-01-11T18:00:00",
+        "ketQua":  "12,18,55,76,38,59"
+    },
+    {
+        "id":  12,
+        "maDai":  "quang-nam",
+        "ngayQuay":  "2025-01-12T18:00:00",
+        "ketQua":  "44,9,83,62,52,48"
+    },
+    {
+        "id":  13,
+        "maDai":  "quang-nam",
+        "ngayQuay":  "2025-01-13T18:00:00",
+        "ketQua":  "59,92,55,33,29,59"
+    },
+    {
+        "id":  14,
+        "maDai":  "quang-nam",
+        "ngayQuay":  "2025-01-14T18:00:00",
+        "ketQua":  "64,80,63,63,19,77"
+    },
+    {
+        "id":  15,
+        "maDai":  "quang-nam",
+        "ngayQuay":  "2025-01-15T18:00:00",
+        "ketQua":  "22,79,89,7,16,77"
+    },
+    {
+        "id":  16,
+        "maDai":  "quang-nam",
+        "ngayQuay":  "2025-01-16T18:00:00",
+        "ketQua":  "64,34,21,27,86,98"
+    },
+    {
+        "id":  17,
+        "maDai":  "quang-nam",
+        "ngayQuay":  "2025-01-17T18:00:00",
+        "ketQua":  "33,86,32,75,8,66"
+    },
+    {
+        "id":  18,
+        "maDai":  "quang-nam",
+        "ngayQuay":  "2025-01-18T18:00:00",
+        "ketQua":  "26,0,98,75,38,86"
+    },
+    {
+        "id":  19,
+        "maDai":  "quang-nam",
+        "ngayQuay":  "2025-01-19T18:00:00",
+        "ketQua":  "50,26,20,7,14,82"
+    },
+    {
+        "id":  20,
+        "maDai":  "quang-nam",
+        "ngayQuay":  "2025-01-20T18:00:00",
+        "ketQua":  "20,49,98,78,53,59"
+    },
+    {
+        "id":  21,
+        "maDai":  "quang-nam",
+        "ngayQuay":  "2025-01-21T18:00:00",
+        "ketQua":  "70,37,92,5,98,17"
+    },
+    {
+        "id":  22,
+        "maDai":  "quang-nam",
+        "ngayQuay":  "2025-01-22T18:00:00",
+        "ketQua":  "27,31,6,57,99,42"
+    },
+    {
+        "id":  23,
+        "maDai":  "quang-nam",
+        "ngayQuay":  "2025-01-23T18:00:00",
+        "ketQua":  "26,88,71,97,36,19"
+    },
+    {
+        "id":  24,
+        "maDai":  "quang-nam",
+        "ngayQuay":  "2025-01-24T18:00:00",
+        "ketQua":  "78,46,40,2,56,89"
+    },
+    {
+        "id":  25,
+        "maDai":  "quang-nam",
+        "ngayQuay":  "2025-01-25T18:00:00",
+        "ketQua":  "56,56,19,38,7,37"
+    },
+    {
+        "id":  26,
+        "maDai":  "quang-nam",
+        "ngayQuay":  "2025-01-26T18:00:00",
+        "ketQua":  "0,55,32,73,5,70"
+    },
+    {
+        "id":  27,
+        "maDai":  "quang-nam",
+        "ngayQuay":  "2025-01-27T18:00:00",
+        "ketQua":  "73,20,2,80,47,6"
+    },
+    {
+        "id":  28,
+        "maDai":  "quang-nam",
+        "ngayQuay":  "2025-01-28T18:00:00",
+        "ketQua":  "80,93,27,78,80,26"
+    },
+    {
+        "id":  29,
+        "maDai":  "quang-nam",
+        "ngayQuay":  "2025-01-29T18:00:00",
+        "ketQua":  "10,22,12,79,99,6"
+    },
+    {
+        "id":  30,
+        "maDai":  "quang-nam",
+        "ngayQuay":  "2025-01-30T18:00:00",
+        "ketQua":  "19,67,81,2,49,41"
+    },
+    {
+        "id":  31,
+        "maDai":  "quang-nam",
+        "ngayQuay":  "2025-01-31T18:00:00",
+        "ketQua":  "98,88,24,69,57,44"
+    },
+    {
+        "id":  32,
+        "maDai":  "quang-nam",
+        "ngayQuay":  "2025-02-01T18:00:00",
+        "ketQua":  "9,53,82,0,23,16"
+    },
+    {
+        "id":  33,
+        "maDai":  "quang-nam",
+        "ngayQuay":  "2025-02-02T18:00:00",
+        "ketQua":  "16,97,99,33,21,62"
+    },
+    {
+        "id":  34,
+        "maDai":  "quang-nam",
+        "ngayQuay":  "2025-02-03T18:00:00",
+        "ketQua":  "62,78,76,92,28,84"
+    },
+    {
+        "id":  35,
+        "maDai":  "quang-nam",
+        "ngayQuay":  "2025-02-04T18:00:00",
+        "ketQua":  "24,20,56,26,54,37"
+    },
+    {
+        "id":  36,
+        "maDai":  "quang-nam",
+        "ngayQuay":  "2025-02-05T18:00:00",
+        "ketQua":  "89,71,71,60,82,58"
+    },
+    {
+        "id":  37,
+        "maDai":  "quang-nam",
+        "ngayQuay":  "2025-02-06T18:00:00",
+        "ketQua":  "82,11,36,83,68,27"
+    },
+    {
+        "id":  38,
+        "maDai":  "quang-nam",
+        "ngayQuay":  "2025-02-07T18:00:00",
+        "ketQua":  "43,9,99,96,62,1"
+    },
+    {
+        "id":  39,
+        "maDai":  "quang-nam",
+        "ngayQuay":  "2025-02-08T18:00:00",
+        "ketQua":  "7,85,46,19,40,71"
+    },
+    {
+        "id":  40,
+        "maDai":  "quang-nam",
+        "ngayQuay":  "2025-02-09T18:00:00",
+        "ketQua":  "65,5,60,39,44,36"
+    }
+]

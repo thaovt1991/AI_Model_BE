@@ -15,6 +15,8 @@ public class AiController : ControllerBase
     private readonly ChatProfileSettingsService _profileSettings;
     private readonly ModelLearningService _modelLearning;
     private readonly LearningSettingsService _learningSettings;
+    private readonly LottoForecastService _lottoForecast;
+    private readonly MinhNgocScrapeSettingsService _minhNgocScrapeSettings;
 
     public AiController(
         MlPredictionService mlService,
@@ -23,7 +25,9 @@ public class AiController : ControllerBase
         ChatMemoryService chatMemory,
         ChatProfileSettingsService profileSettings,
         ModelLearningService modelLearning,
-        LearningSettingsService learningSettings)
+        LearningSettingsService learningSettings,
+        LottoForecastService lottoForecast,
+        MinhNgocScrapeSettingsService minhNgocScrapeSettings)
     {
         _mlService = mlService;
         _llamaService = llamaService;
@@ -32,6 +36,8 @@ public class AiController : ControllerBase
         _profileSettings = profileSettings;
         _modelLearning = modelLearning;
         _learningSettings = learningSettings;
+        _lottoForecast = lottoForecast;
+        _minhNgocScrapeSettings = minhNgocScrapeSettings;
     }
 
     /// <summary>GET /api/ai/health — kiểm tra nhanh Backend đã chạy OK.</summary>
@@ -56,6 +62,140 @@ public class AiController : ControllerBase
 
         var result = _mlService.Predict(request);
         return Ok(result);
+    }
+
+    /// <summary>GET /api/ai/lotto/games — danh mục loại xổ số và đài.</summary>
+    [HttpGet("lotto/games")]
+    public ActionResult<IReadOnlyList<LottoGameInfoDto>> GetLottoGames() =>
+        Ok(_lottoForecast.GetGameCatalog());
+
+    /// <summary>GET /api/ai/lotto/latest — kỳ quay gần nhất của đài.</summary>
+    [HttpGet("lotto/latest")]
+    public async Task<ActionResult<LottoLatestResponse>> GetLottoLatest(
+        [FromQuery] string gameKind,
+        [FromQuery] string? daiCode,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var latest = await _lottoForecast.GetLatestForApiAsync(gameKind, daiCode, cancellationToken);
+            return Ok(new LottoLatestResponse(gameKind, daiCode, latest));
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    /// <summary>GET /api/ai/lotto/records — lịch sử theo loại/đài (file mẫu).</summary>
+    [HttpGet("lotto/records")]
+    public async Task<ActionResult<IReadOnlyList<LotteryRecord>>> GetLottoRecords(
+        [FromQuery] string gameKind,
+        [FromQuery] string? daiCode,
+        CancellationToken cancellationToken,
+        [FromServices] LotteryRecordLoader loader)
+    {
+        try
+        {
+            var data = await loader.LoadDatasetAsync(gameKind, daiCode, cancellationToken);
+            return Ok(data);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    /// <summary>GET /api/ai/lotto/history — lịch sử Minh Ngọc theo ngày/đài.</summary>
+    [HttpGet("lotto/history")]
+    public async Task<ActionResult<LottoHistoryResponse>> GetLottoHistory(
+        [FromQuery] string gameKind,
+        [FromQuery] string? daiCode,
+        [FromQuery] string? fromDate,
+        [FromQuery] string? toDate,
+        [FromQuery] string? date,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            DateTime? from = ParseViDate(fromDate);
+            DateTime? to = ParseViDate(toDate);
+            DateTime? single = ParseViDate(date);
+            return Ok(await _lottoForecast.GetHistoryAsync(
+                gameKind, daiCode, from, to, single, cancellationToken));
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    /// <summary>GET /api/ai/lotto/lo-gan — thống kê lô gan từ lịch sử.</summary>
+    [HttpGet("lotto/lo-gan")]
+    public async Task<ActionResult<LottoLoGanResponse>> GetLottoLoGan(
+        [FromQuery] string gameKind,
+        [FromQuery] string? daiCode,
+        [FromQuery] int top = 30,
+        CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            return Ok(await _lottoForecast.GetLoGanAsync(gameKind, daiCode, top, cancellationToken));
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    private static DateTime? ParseViDate(string? text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            return null;
+        }
+
+        string[] formats = ["dd/MM/yyyy", "yyyy-MM-dd", "dd-MM-yyyy"];
+        foreach (var fmt in formats)
+        {
+            if (DateTime.TryParseExact(text, fmt, null, System.Globalization.DateTimeStyles.None, out var d))
+            {
+                return d;
+            }
+        }
+
+        return DateTime.TryParse(text, out var parsed) ? parsed : null;
+    }
+
+    /// <summary>GET /api/ai/lotto/scrape-settings — cài đặt cào Minh Ngọc.</summary>
+    [HttpGet("lotto/scrape-settings")]
+    public ActionResult<MinhNgocScrapeSettingsResponse> GetMinhNgocScrapeSettings() =>
+        Ok(_minhNgocScrapeSettings.GetResponse());
+
+    /// <summary>PUT /api/ai/lotto/scrape-settings — cập nhật cài đặt cào (áp dụng ngay, lưu file).</summary>
+    [HttpPut("lotto/scrape-settings")]
+    public ActionResult<MinhNgocScrapeSettingsResponse> UpdateMinhNgocScrapeSettings(
+        [FromBody] UpdateMinhNgocScrapeSettingsRequest request) =>
+        Ok(_minhNgocScrapeSettings.Update(request));
+
+    /// <summary>POST /api/ai/lotto/run — huấn luyện SSA và dự đoán.</summary>
+    [HttpPost("lotto/run")]
+    public async Task<ActionResult<LottoRunResponse>> RunLottoForecast(
+        [FromBody] LottoRunRequest request,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            return Ok(await _lottoForecast.RunForecastAsync(request, cancellationToken));
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 
     /// <summary>

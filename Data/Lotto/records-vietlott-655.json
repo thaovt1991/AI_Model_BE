@@ -1,0 +1,562 @@
+﻿[
+    {
+        "dai":  "Vietlott Power 6/55",
+        "ngayQuay":  "2024-06-01T18:00:00",
+        "kyQuay":  1,
+        "cacSoDaVe":  [
+                          23,
+                          39,
+                          28,
+                          48,
+                          2,
+                          46,
+                          55
+                      ]
+    },
+    {
+        "dai":  "Vietlott Power 6/55",
+        "ngayQuay":  "2024-06-04T18:00:00",
+        "kyQuay":  2,
+        "cacSoDaVe":  [
+                          25,
+                          29,
+                          22,
+                          40,
+                          11,
+                          31,
+                          10
+                      ]
+    },
+    {
+        "dai":  "Vietlott Power 6/55",
+        "ngayQuay":  "2024-06-07T18:00:00",
+        "kyQuay":  3,
+        "cacSoDaVe":  [
+                          36,
+                          39,
+                          44,
+                          35,
+                          49,
+                          17,
+                          31
+                      ]
+    },
+    {
+        "dai":  "Vietlott Power 6/55",
+        "ngayQuay":  "2024-06-10T18:00:00",
+        "kyQuay":  4,
+        "cacSoDaVe":  [
+                          39,
+                          11,
+                          30,
+                          14,
+                          9,
+                          33,
+                          25
+                      ]
+    },
+    {
+        "dai":  "Vietlott Power 6/55",
+        "ngayQuay":  "2024-06-13T18:00:00",
+        "kyQuay":  5,
+        "cacSoDaVe":  [
+                          3,
+                          4,
+                          38,
+                          23,
+                          39,
+                          55,
+                          45
+                      ]
+    },
+    {
+        "dai":  "Vietlott Power 6/55",
+        "ngayQuay":  "2024-06-16T18:00:00",
+        "kyQuay":  6,
+        "cacSoDaVe":  [
+                          34,
+                          15,
+                          14,
+                          5,
+                          4,
+                          50,
+                          44
+                      ]
+    },
+    {
+        "dai":  "Vietlott Power 6/55",
+        "ngayQuay":  "2024-06-19T18:00:00",
+        "kyQuay":  7,
+        "cacSoDaVe":  [
+                          52,
+                          30,
+                          33,
+                          11,
+                          10,
+                          37,
+                          39
+                      ]
+    },
+    {
+        "dai":  "Vietlott Power 6/55",
+        "ngayQuay":  "2024-06-22T18:00:00",
+        "kyQuay":  8,
+        "cacSoDaVe":  [
+                          2,
+                          53,
+                          1,
+                          28,
+                          5,
+                          39,
+                          37
+                      ]
+    },
+    {
+        "dai":  "Vietlott Power 6/55",
+        "ngayQuay":  "2024-06-25T18:00:00",
+        "kyQuay":  9,
+        "cacSoDaVe":  [
+                          38,
+                          33,
+                          13,
+                          44,
+                          40,
+                          27,
+                          39
+                      ]
+    },
+    {
+        "dai":  "Vietlott Power 6/55",
+        "ngayQuay":  "2024-06-28T18:00:00",
+        "kyQuay":  10,
+        "cacSoDaVe":  [
+                          31,
+                          10,
+                          16,
+                          9,
+                          38,
+                          7,
+                          19
+                      ]
+    },
+    {
+        "dai":  "Vietlott Power 6/55",
+        "ngayQuay":  "2024-07-01T18:00:00",
+        "kyQuay":  11,
+        "cacSoDaVe":  [
+                          43,
+                          9,
+                          8,
+                          23,
+                          49,
+                          32,
+                          10
+                      ]
+    },
+    {
+        "dai":  "Vietlott Power 6/55",
+        "ngayQuay":  "2024-07-04T18:00:00",
+        "kyQuay":  12,
+        "cacSoDaVe":  [
+                          2,
+                          14,
+                          20,
+                          46,
+                          30,
+                          24,
+                          37
+                      ]
+    },
+    {
+        "dai":  "Vietlott Power 6/55",
+        "ngayQuay":  "2024-07-07T18:00:00",
+        "kyQuay":  13,
+        "cacSoDaVe":  [
+                          29,
+                          7,
+                          53,
+                          17,
+                          21,
+                          39,
+                          3
+                      ]
+    },
+    {
+        "dai":  "Vietlott Power 6/55",
+        "ngayQuay":  "2024-07-10T18:00:00",
+        "kyQuay":  14,
+        "cacSoDaVe":  [
+                          13,
+                          12,
+                          9,
+                          48,
+                          39,
+                          25,
+                          53
+                      ]
+    },
+    {
+        "dai":  "Vietlott Power 6/55",
+        "ngayQuay":  "2024-07-13T18:00:00",
+        "kyQuay":  15,
+        "cacSoDaVe":  [
+                          16,
+                          21,
+                          7,
+                          24,
+                          48,
+                          37,
+                          32
+                      ]
+    },
+    {
+        "dai":  "Vietlott Power 6/55",
+        "ngayQuay":  "2024-07-16T18:00:00",
+        "kyQuay":  16,
+        "cacSoDaVe":  [
+                          43,
+                          37,
+                          8,
+                          44,
+                          47,
+                          26,
+                          38
+                      ]
+    },
+    {
+        "dai":  "Vietlott Power 6/55",
+        "ngayQuay":  "2024-07-19T18:00:00",
+        "kyQuay":  17,
+        "cacSoDaVe":  [
+                          11,
+                          41,
+                          4,
+                          53,
+                          20,
+                          2,
+                          31
+                      ]
+    },
+    {
+        "dai":  "Vietlott Power 6/55",
+        "ngayQuay":  "2024-07-22T18:00:00",
+        "kyQuay":  18,
+        "cacSoDaVe":  [
+                          2,
+                          48,
+                          51,
+                          9,
+                          10,
+                          43,
+                          22
+                      ]
+    },
+    {
+        "dai":  "Vietlott Power 6/55",
+        "ngayQuay":  "2024-07-25T18:00:00",
+        "kyQuay":  19,
+        "cacSoDaVe":  [
+                          34,
+                          53,
+                          5,
+                          16,
+                          32,
+                          30,
+                          25
+                      ]
+    },
+    {
+        "dai":  "Vietlott Power 6/55",
+        "ngayQuay":  "2024-07-28T18:00:00",
+        "kyQuay":  20,
+        "cacSoDaVe":  [
+                          33,
+                          16,
+                          48,
+                          11,
+                          39,
+                          19,
+                          43
+                      ]
+    },
+    {
+        "dai":  "Vietlott Power 6/55",
+        "ngayQuay":  "2024-07-31T18:00:00",
+        "kyQuay":  21,
+        "cacSoDaVe":  [
+                          19,
+                          54,
+                          17,
+                          23,
+                          29,
+                          44,
+                          1
+                      ]
+    },
+    {
+        "dai":  "Vietlott Power 6/55",
+        "ngayQuay":  "2024-08-03T18:00:00",
+        "kyQuay":  22,
+        "cacSoDaVe":  [
+                          9,
+                          1,
+                          55,
+                          48,
+                          23,
+                          10,
+                          30
+                      ]
+    },
+    {
+        "dai":  "Vietlott Power 6/55",
+        "ngayQuay":  "2024-08-06T18:00:00",
+        "kyQuay":  23,
+        "cacSoDaVe":  [
+                          35,
+                          6,
+                          12,
+                          10,
+                          9,
+                          1,
+                          19
+                      ]
+    },
+    {
+        "dai":  "Vietlott Power 6/55",
+        "ngayQuay":  "2024-08-09T18:00:00",
+        "kyQuay":  24,
+        "cacSoDaVe":  [
+                          50,
+                          48,
+                          27,
+                          33,
+                          45,
+                          35,
+                          55
+                      ]
+    },
+    {
+        "dai":  "Vietlott Power 6/55",
+        "ngayQuay":  "2024-08-12T18:00:00",
+        "kyQuay":  25,
+        "cacSoDaVe":  [
+                          5,
+                          24,
+                          7,
+                          15,
+                          53,
+                          29,
+                          38
+                      ]
+    },
+    {
+        "dai":  "Vietlott Power 6/55",
+        "ngayQuay":  "2024-08-15T18:00:00",
+        "kyQuay":  26,
+        "cacSoDaVe":  [
+                          44,
+                          53,
+                          50,
+                          28,
+                          41,
+                          47,
+                          1
+                      ]
+    },
+    {
+        "dai":  "Vietlott Power 6/55",
+        "ngayQuay":  "2024-08-18T18:00:00",
+        "kyQuay":  27,
+        "cacSoDaVe":  [
+                          10,
+                          54,
+                          38,
+                          29,
+                          30,
+                          31,
+                          1
+                      ]
+    },
+    {
+        "dai":  "Vietlott Power 6/55",
+        "ngayQuay":  "2024-08-21T18:00:00",
+        "kyQuay":  28,
+        "cacSoDaVe":  [
+                          48,
+                          28,
+                          24,
+                          23,
+                          51,
+                          27,
+                          14
+                      ]
+    },
+    {
+        "dai":  "Vietlott Power 6/55",
+        "ngayQuay":  "2024-08-24T18:00:00",
+        "kyQuay":  29,
+        "cacSoDaVe":  [
+                          37,
+                          12,
+                          45,
+                          13,
+                          3,
+                          33,
+                          4
+                      ]
+    },
+    {
+        "dai":  "Vietlott Power 6/55",
+        "ngayQuay":  "2024-08-27T18:00:00",
+        "kyQuay":  30,
+        "cacSoDaVe":  [
+                          20,
+                          46,
+                          25,
+                          31,
+                          50,
+                          5,
+                          47
+                      ]
+    },
+    {
+        "dai":  "Vietlott Power 6/55",
+        "ngayQuay":  "2024-08-30T18:00:00",
+        "kyQuay":  31,
+        "cacSoDaVe":  [
+                          5,
+                          40,
+                          27,
+                          47,
+                          20,
+                          28,
+                          44
+                      ]
+    },
+    {
+        "dai":  "Vietlott Power 6/55",
+        "ngayQuay":  "2024-09-02T18:00:00",
+        "kyQuay":  32,
+        "cacSoDaVe":  [
+                          49,
+                          11,
+                          17,
+                          4,
+                          12,
+                          44,
+                          10
+                      ]
+    },
+    {
+        "dai":  "Vietlott Power 6/55",
+        "ngayQuay":  "2024-09-05T18:00:00",
+        "kyQuay":  33,
+        "cacSoDaVe":  [
+                          53,
+                          18,
+                          26,
+                          8,
+                          7,
+                          29,
+                          42
+                      ]
+    },
+    {
+        "dai":  "Vietlott Power 6/55",
+        "ngayQuay":  "2024-09-08T18:00:00",
+        "kyQuay":  34,
+        "cacSoDaVe":  [
+                          13,
+                          21,
+                          39,
+                          24,
+                          3,
+                          26,
+                          4
+                      ]
+    },
+    {
+        "dai":  "Vietlott Power 6/55",
+        "ngayQuay":  "2024-09-11T18:00:00",
+        "kyQuay":  35,
+        "cacSoDaVe":  [
+                          50,
+                          21,
+                          35,
+                          28,
+                          11,
+                          18,
+                          32
+                      ]
+    },
+    {
+        "dai":  "Vietlott Power 6/55",
+        "ngayQuay":  "2024-09-14T18:00:00",
+        "kyQuay":  36,
+        "cacSoDaVe":  [
+                          42,
+                          6,
+                          45,
+                          16,
+                          31,
+                          37,
+                          5
+                      ]
+    },
+    {
+        "dai":  "Vietlott Power 6/55",
+        "ngayQuay":  "2024-09-17T18:00:00",
+        "kyQuay":  37,
+        "cacSoDaVe":  [
+                          18,
+                          48,
+                          13,
+                          19,
+                          39,
+                          10,
+                          27
+                      ]
+    },
+    {
+        "dai":  "Vietlott Power 6/55",
+        "ngayQuay":  "2024-09-20T18:00:00",
+        "kyQuay":  38,
+        "cacSoDaVe":  [
+                          37,
+                          25,
+                          38,
+                          17,
+                          46,
+                          39,
+                          7
+                      ]
+    },
+    {
+        "dai":  "Vietlott Power 6/55",
+        "ngayQuay":  "2024-09-23T18:00:00",
+        "kyQuay":  39,
+        "cacSoDaVe":  [
+                          52,
+                          4,
+                          16,
+                          24,
+                          7,
+                          12,
+                          31
+                      ]
+    },
+    {
+        "dai":  "Vietlott Power 6/55",
+        "ngayQuay":  "2024-09-26T18:00:00",
+        "kyQuay":  40,
+        "cacSoDaVe":  [
+                          37,
+                          43,
+                          12,
+                          55,
+                          40,
+                          7,
+                          29
+                      ]
+    }
+]

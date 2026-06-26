@@ -56,6 +56,10 @@
               "target": "Package",
               "version": "[3.5.1, )"
             },
+            "HtmlAgilityPack": {
+              "target": "Package",
+              "version": "[1.11.72, )"
+            },
             "LLamaSharp": {
               "target": "Package",
               "version": "[0.27.0, )"
@@ -65,6 +69,10 @@
               "version": "[0.27.0, )"
             },
             "Microsoft.ML": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            },
+            "Microsoft.ML.TimeSeries": {
               "target": "Package",
               "version": "[5.0.0, )"
             },
