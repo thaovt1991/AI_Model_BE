@@ -66,7 +66,8 @@ public sealed class LotteryRecordLoader
             var records = await ReadRecordsFileAsync(path, cancellationToken);
             if (records.Count > 0)
             {
-                return LotteryRecordNormalizer.EnsureKyQuayPerDai(records);
+                var filtered = FilterMienBacRecordsForDai(gameKind, daiCode, records);
+                return LotteryRecordNormalizer.EnsureKyQuayPerDai(filtered);
             }
         }
 
@@ -89,7 +90,26 @@ public sealed class LotteryRecordLoader
             })
             .ToList();
 
-        return LotteryRecordNormalizer.EnsureKyQuayPerDai(converted);
+        return LotteryRecordNormalizer.EnsureKyQuayPerDai(
+            FilterMienBacRecordsForDai(gameKind, daiCode, converted));
+    }
+
+    /// <summary>XSMB: mỗi đài chỉ giữ các kỳ đúng ngày phát hành của đài đó.</summary>
+    private static List<LotteryRecord> FilterMienBacRecordsForDai(
+        string gameKind,
+        string daiCode,
+        List<LotteryRecord> records)
+    {
+        if (gameKind != LottoGameKinds.XsMienBac)
+        {
+            return records;
+        }
+
+        return records
+            .Where(r => MienBacDaiSchedule.IsDaiDrawDay(r.NgayQuay, daiCode))
+            .OrderBy(r => r.NgayQuay)
+            .ThenBy(r => r.KyQuay)
+            .ToList();
     }
 
     private IEnumerable<string> EnumerateRecordFiles(LottoGameProfile profile, string gameKind)

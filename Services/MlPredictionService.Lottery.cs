@@ -134,7 +134,7 @@ public sealed partial class MlPredictionService
             var loExtras = IsVietlott(gameKind)
                 ? null
                 : TrimLotoExtras(
-                    LottoLotoPredictor.Predict(sortedData, gameKind),
+                    LottoLotoPredictor.Predict(sortedData, gameKind, daiCode),
                     gameKind);
 
             var nextDrawDate = LottoDrawSchedule.ComputeNextDrawDate(

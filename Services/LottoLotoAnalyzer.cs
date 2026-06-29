@@ -54,6 +54,67 @@ internal static class LottoLotoAnalyzer
         return loto.Count > 0 ? loto.Max() : 0;
     }
 
+    /// <summary>Hai chữ số đầu giải ĐB — chuỗi SSA riêng cho song thủ.</summary>
+    public static int GetSpecialPrizeHeadLo2(LotteryRecord record, string gameKind)
+    {
+        if (record.GiaiDacBietSo.Count >= 2)
+        {
+            var digits = string.Concat(record.GiaiDacBietSo.Select(static d => d.ToString()));
+            return ParseLo(digits[..2]);
+        }
+
+        if (gameKind == LottoGameKinds.XsMienBac && record.CacSoDaVe.Count >= 2)
+        {
+            return ParseLo(string.Concat(record.CacSoDaVe.Select(static d => d.ToString()))[..2]);
+        }
+
+        return GetSpecialPrizeLo2(record, gameKind);
+    }
+
+    /// <summary>Hai chữ số giữa giải ĐB (MB) — tín hiệu SSA khác đuôi/đầu.</summary>
+    public static int GetSpecialPrizeMidLo2(LotteryRecord record, string gameKind)
+    {
+        if (record.GiaiDacBietSo.Count >= 4)
+        {
+            var digits = string.Concat(record.GiaiDacBietSo.Select(static d => d.ToString()));
+            if (digits.Length >= 4)
+            {
+                return ParseLo(digits.Substring(2, 2));
+            }
+        }
+
+        if (gameKind == LottoGameKinds.XsMienBac && record.CacSoDaVe.Count >= 4)
+        {
+            var digits = string.Concat(record.CacSoDaVe.Select(static d => d.ToString()));
+            if (digits.Length >= 4)
+            {
+                return ParseLo(digits.Substring(2, 2));
+            }
+        }
+
+        return GetSpecialPrizeHeadLo2(record, gameKind);
+    }
+
+    /// <summary>Lô đại diện mỗi kỳ (ưu tiên lô về thực tế) — khác đuôi ĐB.</summary>
+    public static int GetDrawRepresentativeLo(LotteryRecord record, string gameKind)
+    {
+        if (record.TatCaLoVe.Count > 0)
+        {
+            return record.TatCaLoVe
+                .GroupBy(static n => n)
+                .OrderByDescending(static g => g.Count())
+                .ThenBy(static g => g.Key)
+                .First().Key;
+        }
+
+        if (gameKind == LottoGameKinds.XsMienBac)
+        {
+            return GetSpecialPrizeMidLo2(record, gameKind);
+        }
+
+        return GetSpecialPrizeLo2(record, gameKind);
+    }
+
     public static List<LoGanItem> ComputeLoGan(
         IReadOnlyList<LotteryRecord> orderedHistory,
         string gameKind,
