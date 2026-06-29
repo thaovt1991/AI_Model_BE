@@ -10,6 +10,7 @@ public sealed partial class MlPredictionService
     private const int MinHistoryDraws = 20;
 
     private readonly MinhNgocLotteryScraper _minhNgocScraper;
+    private readonly VietlottLotteryScraper _vietlottScraper;
     private readonly LotteryRecordLoader _lotteryLoader;
     private readonly MinhNgocScrapeSettingsService _scrapeSettings;
 
@@ -144,12 +145,6 @@ public sealed partial class MlPredictionService
                 gameKind,
                 historicalDates);
 
-            if (gameKind == LottoGameKinds.XsMienBac)
-            {
-                var nextDai = MienBacDaiSchedule.ResolveDaiForDate(nextDrawDate);
-                daiName = nextDai.Name;
-            }
-
             var dbParseMode = gameKind switch
             {
                 LottoGameKinds.XsMienBac => LottoParseMode.SpecialPrizeFiveDigits,
@@ -246,6 +241,20 @@ public sealed partial class MlPredictionService
             catch (Exception ex)
             {
                 _logger.LogWarning(ex, "Không cào được XSMB từ Minh Ngọc");
+            }
+        }
+        else if (IsVietlott(gameKind))
+        {
+            try
+            {
+                scraped = await _vietlottScraper.FetchHistoryAsync(
+                    gameKind,
+                    MinHistoryDraws + 10,
+                    cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Không cào được Vietlott {Game}", gameKind);
             }
         }
 

@@ -79,7 +79,37 @@ internal static class LottoDrawSchedule
     {
         if (gameKind == LottoGameKinds.XsMienBac)
         {
+            if (!string.IsNullOrWhiteSpace(daiCode))
+            {
+                var mbNext = lastDrawDate.Date.AddDays(1);
+                for (var i = 0; i < 14; i++)
+                {
+                    if (MienBacDaiSchedule.IsDaiDrawDay(mbNext, daiCode))
+                    {
+                        return mbNext;
+                    }
+
+                    mbNext = mbNext.AddDays(1);
+                }
+            }
+
             return lastDrawDate.Date.AddDays(1);
+        }
+
+        if (gameKind is LottoGameKinds.Vietlott645 or LottoGameKinds.Vietlott655)
+        {
+            var vltNext = lastDrawDate.Date.AddDays(1);
+            for (var i = 0; i < 14; i++)
+            {
+                if (IsVietlottDrawDay(vltNext, gameKind))
+                {
+                    return vltNext;
+                }
+
+                vltNext = vltNext.AddDays(1);
+            }
+
+            return lastDrawDate.Date.AddDays(2);
         }
 
         var histWeekdays = historicalDates?
@@ -108,6 +138,14 @@ internal static class LottoDrawSchedule
         return FindNextFromHistory(lastDrawDate, historicalDates)
             ?? lastDrawDate.Date.AddDays(7);
     }
+
+    private static bool IsVietlottDrawDay(DateTime date, string gameKind) =>
+        gameKind switch
+        {
+            LottoGameKinds.Vietlott645 => date.DayOfWeek is DayOfWeek.Wednesday or DayOfWeek.Friday or DayOfWeek.Sunday,
+            LottoGameKinds.Vietlott655 => date.DayOfWeek is DayOfWeek.Tuesday or DayOfWeek.Thursday or DayOfWeek.Saturday,
+            _ => false,
+        };
 
     private static DateTime? FindNextFromHistory(
         DateTime lastDrawDate,

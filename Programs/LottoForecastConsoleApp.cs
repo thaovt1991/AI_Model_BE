@@ -28,13 +28,16 @@ public static class LottoForecastConsoleApp
             ["MinhNgoc:RequestDelayMs"] = "800",
         }).Build());
         services.AddHttpClient(nameof(MinhNgocLotteryScraper));
+        services.AddHttpClient(nameof(VietlottLotteryScraper));
         services.AddSingleton<MinhNgocScrapeSettingsService>();
         services.AddSingleton<MinhNgocLotteryScraper>();
+        services.AddSingleton<VietlottLotteryScraper>();
         services.AddSingleton<LotteryRecordLoader>();
         services.AddSingleton<MlPredictionService>(sp => new MlPredictionService(
             env,
             sp.GetRequiredService<ILogger<MlPredictionService>>(),
             sp.GetRequiredService<MinhNgocLotteryScraper>(),
+            sp.GetRequiredService<VietlottLotteryScraper>(),
             sp.GetRequiredService<LotteryRecordLoader>(),
             sp.GetRequiredService<MinhNgocScrapeSettingsService>()));
         services.AddSingleton<LottoForecastService>();

@@ -24,6 +24,8 @@ public sealed class LottoForecastService
 
     private readonly MinhNgocLotteryScraper _scraper;
 
+    private readonly VietlottLotteryScraper _vietlottScraper;
+
     private readonly MinhNgocScrapeSettingsService _scrapeSettings;
 
 
@@ -36,6 +38,8 @@ public sealed class LottoForecastService
 
         MinhNgocLotteryScraper scraper,
 
+        VietlottLotteryScraper vietlottScraper,
+
         MinhNgocScrapeSettingsService scrapeSettings,
 
         ILogger<LottoForecastService> logger)
@@ -47,6 +51,8 @@ public sealed class LottoForecastService
         _mlPrediction = mlPrediction;
 
         _scraper = scraper;
+
+        _vietlottScraper = vietlottScraper;
 
         _scrapeSettings = scrapeSettings;
 
@@ -490,6 +496,48 @@ public sealed class LottoForecastService
                 daiName,
 
                 cancellationToken);
+
+        }
+
+
+
+        if (gameKind is LottoGameKinds.Vietlott645 or LottoGameKinds.Vietlott655)
+
+        {
+
+            if (settings.ScrapingEnabled)
+
+            {
+
+                try
+
+                {
+
+                    var scraped = await _vietlottScraper.FetchLatestAsync(gameKind, cancellationToken);
+
+                    if (scraped is not null)
+
+                    {
+
+                        return scraped;
+
+                    }
+
+                }
+
+                catch (Exception ex)
+
+                {
+
+                    _logger.LogDebug(ex, "Không scrape được Vietlott latest {Game}", gameKind);
+
+                }
+
+            }
+
+
+
+            return await TryGetLatestFromLocalAsync(gameKind, null, daiName, cancellationToken);
 
         }
 

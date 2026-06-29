@@ -55,8 +55,16 @@ builder.Services.AddHttpClient(nameof(MinhNgocLotteryScraper), client =>
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AI_Model_BE/1.0");
     client.DefaultRequestHeaders.AcceptLanguage.ParseAdd("vi-VN,vi;q=0.9");
 });
+builder.Services.AddHttpClient(nameof(VietlottLotteryScraper), client =>
+{
+    client.Timeout = TimeSpan.FromSeconds(30);
+    client.DefaultRequestHeaders.UserAgent.ParseAdd(
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AI_Model_BE/1.0");
+    client.DefaultRequestHeaders.AcceptLanguage.ParseAdd("vi-VN,vi;q=0.9");
+});
 builder.Services.AddSingleton<MinhNgocScrapeSettingsService>();
 builder.Services.AddSingleton<MinhNgocLotteryScraper>();
+builder.Services.AddSingleton<VietlottLotteryScraper>();
 builder.Services.AddSingleton<MlPredictionService>();
 builder.Services.AddSingleton<LotteryRecordLoader>();
 builder.Services.AddSingleton<LottoForecastService>();

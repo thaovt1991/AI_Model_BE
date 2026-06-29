@@ -20,11 +20,13 @@ public sealed partial class MlPredictionService
         IWebHostEnvironment env,
         ILogger<MlPredictionService> logger,
         MinhNgocLotteryScraper minhNgocScraper,
+        VietlottLotteryScraper vietlottScraper,
         LotteryRecordLoader lotteryLoader,
         MinhNgocScrapeSettingsService scrapeSettings)
     {
         _logger = logger;
         _minhNgocScraper = minhNgocScraper;
+        _vietlottScraper = vietlottScraper;
         _lotteryLoader = lotteryLoader;
         _scrapeSettings = scrapeSettings;
 
