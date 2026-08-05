@@ -62,6 +62,22 @@ builder.Services.AddHttpClient(nameof(VietlottLotteryScraper), client =>
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AI_Model_BE/1.0");
     client.DefaultRequestHeaders.AcceptLanguage.ParseAdd("vi-VN,vi;q=0.9");
 });
+builder.Services.AddHttpClient(WebResearchService.HttpClientName, client =>
+{
+    var timeoutSec = builder.Configuration.GetValue("WebResearch:TimeoutSeconds", 20);
+    client.Timeout = TimeSpan.FromSeconds(Math.Clamp(timeoutSec, 5, 60));
+    client.DefaultRequestHeaders.UserAgent.ParseAdd(
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36");
+    client.DefaultRequestHeaders.AcceptLanguage.ParseAdd("vi-VN,vi;q=0.9,en-US;q=0.8,en;q=0.7");
+    client.DefaultRequestHeaders.Accept.ParseAdd("text/html,application/xhtml+xml,application/json;q=0.9,*/*;q=0.8");
+});
+builder.Services.AddHttpClient(CoinMarketDataService.HttpClientName, client =>
+{
+    client.Timeout = TimeSpan.FromSeconds(30);
+    client.DefaultRequestHeaders.UserAgent.ParseAdd(
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AI_Model_BE/1.0 CoinForecast");
+    client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
+});
 builder.Services.AddSingleton<MinhNgocScrapeSettingsService>();
 builder.Services.AddSingleton<MinhNgocLotteryScraper>();
 builder.Services.AddSingleton<VietlottLotteryScraper>();
@@ -69,6 +85,12 @@ builder.Services.AddSingleton<MlPredictionService>();
 builder.Services.AddSingleton<LotteryRecordLoader>();
 builder.Services.AddSingleton<LottoForecastService>();
 builder.Services.AddSingleton<LottoChatIntentService>();
+builder.Services.AddSingleton<WebResearchService>();
+builder.Services.AddSingleton<DeepResearchService>();
+builder.Services.AddSingleton<CoinMarketDataService>();
+builder.Services.AddSingleton<CoinLightGbmPredictor>();
+builder.Services.AddSingleton<CoinSsaTrendPredictor>();
+builder.Services.AddSingleton<CoinForecastService>();
 
 // === Học model ngầm (LoRA) ===
 builder.Services.AddSingleton<LearningSettingsService>();

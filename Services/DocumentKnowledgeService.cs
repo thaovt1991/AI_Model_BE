@@ -28,6 +28,10 @@ public sealed class DocumentKnowledgeService
     private readonly int _maxChunksPerQuery; // Lấy tối đa bao nhiêu đoạn khi chat
     private readonly int _maxContextChars;   // Giới hạn tổng ký tự context gửi vào LLM
 
+    // Trọng số Hybrid RAG: embedding vs BM25 (tổng nên ≈ 1.0)
+    private readonly float _embeddingWeight;
+    private readonly float _bm25Weight;
+
     // Lưu metadata tài liệu trong RAM — key là Guid id
     private readonly ConcurrentDictionary<Guid, DocumentInfo> _documents = new();
 
@@ -60,6 +64,9 @@ public sealed class DocumentKnowledgeService
         _chunkOverlap = config.GetValue("Documents:ChunkOverlap", 80);
         _maxChunksPerQuery = config.GetValue("Documents:MaxChunksPerQuery", 3);
         _maxContextChars = config.GetValue("Documents:MaxContextChars", 2400);
+        // Hybrid: 0.55 embedding + 0.45 BM25 — chỉnh trong appsettings nếu muốn
+        _embeddingWeight = config.GetValue("Documents:EmbeddingWeight", 0.55f);
+        _bm25Weight = config.GetValue("Documents:Bm25Weight", 0.45f);
 
         // Khi Backend khởi động: đọc lại file đã lưu từ lần chạy trước
         LoadIndexFromDisk();
@@ -197,23 +204,33 @@ public sealed class DocumentKnowledgeService
     }
 
     /// <summary>
-    /// Tìm các đoạn text liên quan nhất với câu hỏi user, ghép thành context cho LLM.
-    /// Không đọc/ghi file — chỉ làm việc với dữ liệu trong RAM (_chunks).
+    /// Tìm các đoạn liên quan nhất (Hybrid BM25 + Embedding) → ghép context cho LLM.
+    /// Giữ API cũ để chỗ gọi đơn giản không phải sửa hết.
     /// </summary>
-    public string BuildContextForQuery(string question, IReadOnlyList<Guid>? documentIds)
+    public string BuildContextForQuery(string question, IReadOnlyList<Guid>? documentIds) =>
+        Retrieve(question, documentIds).ContextBlock;
+
+    /// <summary>
+    /// =====================================================================
+    /// HYBRID RAG — retrieval chính
+    /// =====================================================================
+    /// 1) Embed câu hỏi bằng LocalTextEmbedding.
+    /// 2) Với mỗi chunk: điểm = EmbeddingWeight * cosine + Bm25Weight * BM25_chuẩn_hóa.
+    /// 3) Lấy top-K chunk, đánh số citation [1]..[K] đồng bộ với UI.
+    /// </summary>
+    public DocumentRetrievalResult Retrieve(string question, IReadOnlyList<Guid>? documentIds)
     {
         if (documentIds is null || documentIds.Count == 0)
         {
-            return string.Empty;
+            return new DocumentRetrievalResult();
         }
 
-        var queryTokens = Tokenize(question);
-        if (queryTokens.Count == 0)
-        {
-            return string.Empty;
-        }
+        var queryTokens = LocalTextEmbedding.Tokenize(question);
+        var queryEmbedding = LocalTextEmbedding.Embed(question);
 
-        var candidates = new List<(DocumentChunk Chunk, int Score)>();
+        // --- Thu thập corpus để tính BM25 (avg length + document frequency) ---
+        var corpus = new List<(DocumentChunk Chunk, Dictionary<string, int> Tf, int Length, float[] Embedding)>();
+        var docFreq = new Dictionary<string, int>(StringComparer.Ordinal);
 
         foreach (var docId in documentIds.Distinct())
         {
@@ -224,45 +241,108 @@ public sealed class DocumentKnowledgeService
 
             foreach (var chunk in docChunks)
             {
-                var score = ScoreChunk(queryTokens, chunk.Text);
-                if (score > 0)
+                EnsureChunkEmbedding(chunk);
+                var tokens = LocalTextEmbedding.Tokenize(chunk.Text);
+                var tf = LocalTextEmbedding.BuildTermFrequency(tokens);
+                foreach (var term in tf.Keys)
                 {
-                    candidates.Add((chunk, score));
+                    docFreq[term] = docFreq.TryGetValue(term, out var c) ? c + 1 : 1;
                 }
+
+                corpus.Add((chunk, tf, tokens.Count, chunk.Embedding!));
             }
         }
 
-        // Không match từ khóa → lấy đoạn đầu tiên làm tổng quan
-        if (candidates.Count == 0)
+        if (corpus.Count == 0)
+        {
+            return new DocumentRetrievalResult();
+        }
+
+        var avgLen = corpus.Average(c => (double)Math.Max(1, c.Length));
+        var totalDocs = corpus.Count;
+
+        var scored = new List<(DocumentChunk Chunk, float Score, float Cosine, float Bm25)>();
+        float maxBm25 = 0f;
+
+        foreach (var item in corpus)
+        {
+            var bm25 = LocalTextEmbedding.Bm25(
+                queryTokens, item.Tf, item.Length, avgLen, docFreq, totalDocs);
+            var cosine = LocalTextEmbedding.Cosine(queryEmbedding, item.Embedding);
+            scored.Add((item.Chunk, 0f, cosine, bm25));
+            if (bm25 > maxBm25)
+            {
+                maxBm25 = bm25;
+            }
+        }
+
+        // Chuẩn hóa BM25 về 0..1 rồi trộn với cosine (đã ∈ ~0..1)
+        for (var i = 0; i < scored.Count; i++)
+        {
+            var s = scored[i];
+            var bm25Norm = maxBm25 > 1e-6f ? s.Bm25 / maxBm25 : 0f;
+            // Cosine âm → coi như 0 (không liên quan)
+            var cos = Math.Max(0f, s.Cosine);
+            var hybrid = _embeddingWeight * cos + _bm25Weight * bm25Norm;
+            scored[i] = (s.Chunk, hybrid, cos, s.Bm25);
+        }
+
+        var top = scored
+            .Where(s => s.Score > 0.02f)
+            .OrderByDescending(s => s.Score)
+            .Take(_maxChunksPerQuery)
+            .ToList();
+
+        // Fallback: không khớp → lấy đoạn đầu mỗi file (giống hành vi cũ)
+        if (top.Count == 0)
         {
             foreach (var docId in documentIds.Distinct())
             {
                 if (_chunks.TryGetValue(docId, out var docChunks) && docChunks.Count > 0)
                 {
-                    candidates.Add((docChunks[0], 1));
+                    top.Add((docChunks[0], 0.01f, 0f, 0f));
                 }
             }
+
+            top = top.Take(_maxChunksPerQuery).ToList();
         }
 
-        var topChunks = candidates
-            .OrderByDescending(c => c.Score)
-            .Take(_maxChunksPerQuery)
-            .Select(c => c.Chunk)
-            .ToList();
-
-        if (topChunks.Count == 0)
+        if (top.Count == 0)
         {
-            return string.Empty;
+            return new DocumentRetrievalResult();
         }
 
-        // Ghép các đoạn text làm context — giới hạn _maxContextChars để prompt không quá dài (LLM CPU chậm)
+        var citations = new List<CitationSource>();
         var sb = new StringBuilder();
-        sb.AppendLine("=== TÀI LIỆU NỘI BỘ (chỉ dùng thông tin dưới đây để trả lời) ===");
+        sb.AppendLine("=== TÀI LIỆU NỘI BỘ (Hybrid RAG: Embedding + BM25) ===");
+        sb.AppendLine("Chỉ dùng thông tin dưới đây từ tài liệu. Khi trích dẫn, ghi [1], [2]...");
+        sb.AppendLine();
 
-        foreach (var chunk in topChunks)
+        for (var i = 0; i < top.Count; i++)
         {
+            var (chunk, score, cosine, _) = top[i];
+            var id = i + 1;
+            var snippet = chunk.Text.Trim();
+            if (snippet.Length > 240)
+            {
+                snippet = snippet[..239] + "…";
+            }
+
+            citations.Add(new CitationSource
+            {
+                Id = id,
+                Kind = "document",
+                Title = $"{chunk.FileName} — đoạn {chunk.Index + 1}",
+                FileName = chunk.FileName,
+                ChunkIndex = chunk.Index + 1,
+                Snippet = snippet,
+                Score = Math.Round(Math.Clamp(score, 0f, 1f), 3),
+                SourceLabel = "Tài liệu nội bộ"
+            });
+
             var block =
-                $"[File: {chunk.FileName} | Đoạn {chunk.Index + 1}]\n{chunk.Text.Trim()}\n---\n";
+                $"[{id}] File: {chunk.FileName} | Đoạn {chunk.Index + 1} | score={score:F3} cos={cosine:F3}\n" +
+                $"{chunk.Text.Trim()}\n---\n";
 
             if (sb.Length + block.Length > _maxContextChars)
             {
@@ -272,11 +352,36 @@ public sealed class DocumentKnowledgeService
             sb.Append(block);
         }
 
-        return sb.ToString().Trim();
+        return new DocumentRetrievalResult
+        {
+            ContextBlock = sb.ToString().Trim(),
+            Citations = citations
+        };
     }
 
     /// <summary>
-    /// Chia văn bản dài thành các đoạn nhỏ (chunk).
+    /// Đảm bảo chunk có embedding trong RAM.
+    /// Tài liệu cũ chưa có EmbeddingSparse → tính lại và có thể persist sau.
+    /// </summary>
+    private void EnsureChunkEmbedding(DocumentChunk chunk)
+    {
+        if (chunk.Embedding is { Length: LocalTextEmbedding.Dimensions })
+        {
+            return;
+        }
+
+        if (chunk.EmbeddingSparse is { Count: > 0 })
+        {
+            chunk.Embedding = LocalTextEmbedding.FromSparse(chunk.EmbeddingSparse);
+            return;
+        }
+
+        chunk.Embedding = LocalTextEmbedding.Embed(chunk.Text);
+        chunk.EmbeddingSparse = LocalTextEmbedding.ToSparse(chunk.Embedding);
+    }
+
+    /// <summary>
+    /// Chia văn bản dài thành các đoạn nhỏ (chunk) + tính embedding sẵn lúc upload.
     /// Ví dụ: text 2000 ký tự, chunkSize=800 → ra 3 đoạn có phần chồng nhau (overlap).
     /// </summary>
     private List<DocumentChunk> SplitIntoChunks(Guid documentId, string fileName, string text)
@@ -290,13 +395,16 @@ public sealed class DocumentKnowledgeService
         {
             var length = Math.Min(_chunkSize, text.Length - start);
             var chunkText = text.Substring(start, length);
+            var embedding = LocalTextEmbedding.Embed(chunkText);
 
             chunks.Add(new DocumentChunk
             {
                 DocumentId = documentId,
                 FileName = fileName,
                 Index = index,
-                Text = chunkText
+                Text = chunkText,
+                Embedding = embedding,
+                EmbeddingSparse = LocalTextEmbedding.ToSparse(embedding)
             });
 
             if (start + length >= text.Length)
@@ -310,20 +418,6 @@ public sealed class DocumentKnowledgeService
         }
 
         return chunks;
-    }
-
-    private static HashSet<string> Tokenize(string text)
-    {
-        var tokens = Regex.Split(text.ToLowerInvariant(), @"[^\p{L}\p{N}]+")
-            .Where(t => t.Length >= 2)
-            .ToHashSet();
-        return tokens;
-    }
-
-    private static int ScoreChunk(HashSet<string> queryTokens, string chunkText)
-    {
-        var chunkTokens = Tokenize(chunkText);
-        return queryTokens.Count(t => chunkTokens.Contains(t));
     }
 
     /// <summary>
@@ -364,6 +458,12 @@ public sealed class DocumentKnowledgeService
                 {
                     var chunkJson = File.ReadAllText(metaPath);
                     var chunks = JsonSerializer.Deserialize<List<DocumentChunk>>(chunkJson) ?? [];
+                    // Nạp embedding vào RAM (tính lại nếu tài liệu cũ chưa có sparse)
+                    foreach (var chunk in chunks)
+                    {
+                        EnsureChunkEmbedding(chunk);
+                    }
+
                     _chunks[doc.Id] = chunks;
                 }
             }

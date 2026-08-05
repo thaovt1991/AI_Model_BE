@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "vYab5NvYhIc=",
+  "dgSpecHash": "PI861UIGM0Y=",
   "success": true,
   "projectFilePath": "D:\\Job\\Model AI\\AI_Model_BE\\AI_Model_BE.csproj",
   "expectedPackageFiles": [
@@ -19,6 +19,7 @@
     "C:\\Users\\FPT\\.nuget\\packages\\microsoft.ml\\5.0.0\\microsoft.ml.5.0.0.nupkg.sha512",
     "C:\\Users\\FPT\\.nuget\\packages\\microsoft.ml.cpumath\\5.0.0\\microsoft.ml.cpumath.5.0.0.nupkg.sha512",
     "C:\\Users\\FPT\\.nuget\\packages\\microsoft.ml.dataview\\5.0.0\\microsoft.ml.dataview.5.0.0.nupkg.sha512",
+    "C:\\Users\\FPT\\.nuget\\packages\\microsoft.ml.fasttree\\5.0.0\\microsoft.ml.fasttree.5.0.0.nupkg.sha512",
     "C:\\Users\\FPT\\.nuget\\packages\\microsoft.ml.mkl.redist\\5.0.0\\microsoft.ml.mkl.redist.5.0.0.nupkg.sha512",
     "C:\\Users\\FPT\\.nuget\\packages\\microsoft.ml.timeseries\\5.0.0\\microsoft.ml.timeseries.5.0.0.nupkg.sha512",
     "C:\\Users\\FPT\\.nuget\\packages\\microsoft.openapi\\1.6.22\\microsoft.openapi.1.6.22.nupkg.sha512",

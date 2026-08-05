@@ -368,6 +368,60 @@
           }
         }
       },
+      "Microsoft.ML.FastTree/5.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Bcl.AsyncInterfaces": "9.0.4",
+          "Microsoft.ML": "5.0.0",
+          "Newtonsoft.Json": "13.0.3",
+          "System.Buffers": "4.6.1",
+          "System.CodeDom": "9.0.4",
+          "System.Collections.Immutable": "9.0.4",
+          "System.Memory": "4.6.3",
+          "System.Reflection.Emit.Lightweight": "4.7.0",
+          "System.Runtime.CompilerServices.Unsafe": "6.1.2",
+          "System.Threading.Channels": "9.0.4"
+        },
+        "compile": {
+          "lib/netstandard2.0/Microsoft.ML.FastTree.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.ML.FastTree.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "build/netstandard2.0/Microsoft.ML.FastTree.props": {}
+        },
+        "runtimeTargets": {
+          "runtimes/linux-x64/native/libFastTreeNative.so": {
+            "assetType": "native",
+            "rid": "linux-x64"
+          },
+          "runtimes/linux-x64/native/libFastTreeNative.so.dbg": {
+            "assetType": "native",
+            "rid": "linux-x64"
+          },
+          "runtimes/osx-x64/native/libFastTreeNative.dylib": {
+            "assetType": "native",
+            "rid": "osx-x64"
+          },
+          "runtimes/osx-x64/native/libFastTreeNative.dylib.dwarf": {
+            "assetType": "native",
+            "rid": "osx-x64"
+          },
+          "runtimes/win-x64/native/FastTreeNative.dll": {
+            "assetType": "native",
+            "rid": "win-x64"
+          },
+          "runtimes/win-x86/native/FastTreeNative.dll": {
+            "assetType": "native",
+            "rid": "win-x86"
+          }
+        }
+      },
       "Microsoft.ML.Mkl.Redist/5.0.0": {
         "type": "package",
         "compile": {
@@ -1625,6 +1679,30 @@
         "mlnetlogo.png"
       ]
     },
+    "Microsoft.ML.FastTree/5.0.0": {
+      "sha512": "ZcqAHfHlG9AMNlDd5OXuuw2uv+ZWa3c43yf1RNWqIRaLbwsLOpKja7kZ8Q0xkyyo2z9Bb2zKhsHtc8wV1CJojg==",
+      "type": "package",
+      "path": "microsoft.ml.fasttree/5.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "PACKAGE.md",
+        "THIRD-PARTY-NOTICES.TXT",
+        "build/netstandard2.0/Microsoft.ML.FastTree.props",
+        "lib/netstandard2.0/Microsoft.ML.FastTree.dll",
+        "lib/netstandard2.0/Microsoft.ML.FastTree.xml",
+        "microsoft.ml.fasttree.5.0.0.nupkg.sha512",
+        "microsoft.ml.fasttree.nuspec",
+        "mlnetlogo.png",
+        "runtimes/linux-x64/native/libFastTreeNative.so",
+        "runtimes/linux-x64/native/libFastTreeNative.so.dbg",
+        "runtimes/osx-x64/native/libFastTreeNative.dylib",
+        "runtimes/osx-x64/native/libFastTreeNative.dylib.dwarf",
+        "runtimes/win-x64/native/FastTreeNative.dll",
+        "runtimes/win-x86/native/FastTreeNative.dll"
+      ]
+    },
     "Microsoft.ML.Mkl.Redist/5.0.0": {
       "sha512": "2ml+nLekvALAkyxeJMx2VEme5KZqfwBAQ5YnjXhTPv+LbKsbpJLYbzlIT5HGIDaBkV6H2OOek9f3gWpfgZPaMg==",
       "type": "package",
@@ -2479,6 +2557,7 @@
       "LLamaSharp >= 0.27.0",
       "LLamaSharp.Backend.Cpu >= 0.27.0",
       "Microsoft.ML >= 5.0.0",
+      "Microsoft.ML.FastTree >= 5.0.0",
       "Microsoft.ML.TimeSeries >= 5.0.0",
       "Swashbuckle.AspNetCore >= 7.2.0",
       "UglyToad.PdfPig >= 1.7.0-custom-5"
@@ -2553,6 +2632,10 @@
             "version": "[0.27.0, )"
           },
           "Microsoft.ML": {
+            "target": "Package",
+            "version": "[5.0.0, )"
+          },
+          "Microsoft.ML.FastTree": {
             "target": "Package",
             "version": "[5.0.0, )"
           },

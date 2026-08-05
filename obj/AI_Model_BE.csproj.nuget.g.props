@@ -17,6 +17,7 @@
     <Import Project="$(NuGetPackageRoot)microsoft.extensions.apidescription.server\6.0.5\build\Microsoft.Extensions.ApiDescription.Server.props" Condition="Exists('$(NuGetPackageRoot)microsoft.extensions.apidescription.server\6.0.5\build\Microsoft.Extensions.ApiDescription.Server.props')" />
     <Import Project="$(NuGetPackageRoot)swashbuckle.aspnetcore\7.2.0\build\Swashbuckle.AspNetCore.props" Condition="Exists('$(NuGetPackageRoot)swashbuckle.aspnetcore\7.2.0\build\Swashbuckle.AspNetCore.props')" />
     <Import Project="$(NuGetPackageRoot)microsoft.ml\5.0.0\build\netstandard2.0\Microsoft.ML.props" Condition="Exists('$(NuGetPackageRoot)microsoft.ml\5.0.0\build\netstandard2.0\Microsoft.ML.props')" />
+    <Import Project="$(NuGetPackageRoot)microsoft.ml.fasttree\5.0.0\build\netstandard2.0\Microsoft.ML.FastTree.props" Condition="Exists('$(NuGetPackageRoot)microsoft.ml.fasttree\5.0.0\build\netstandard2.0\Microsoft.ML.FastTree.props')" />
     <Import Project="$(NuGetPackageRoot)llamasharp.backend.cpu\0.27.0\build\netstandard2.0\LLamaSharp.Backend.Cpu.props" Condition="Exists('$(NuGetPackageRoot)llamasharp.backend.cpu\0.27.0\build\netstandard2.0\LLamaSharp.Backend.Cpu.props')" />
   </ImportGroup>
   <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">

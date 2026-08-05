@@ -12,6 +12,7 @@
           "HtmlAgilityPack": "1.11.72",
           "LLamaSharp": "0.27.0",
           "Microsoft.ML": "5.0.0",
+          "Microsoft.ML.FastTree": "5.0.0",
           "Microsoft.ML.TimeSeries": "5.0.0",
           "Swashbuckle.AspNetCore": "7.2.0",
           "UglyToad.PdfPig": "1.7.0-custom-5"
@@ -247,6 +248,54 @@
           "lib/netstandard2.0/Microsoft.ML.DataView.dll": {
             "assemblyVersion": "1.0.0.0",
             "fileVersion": "5.0.25.55704"
+          }
+        }
+      },
+      "Microsoft.ML.FastTree/5.0.0": {
+        "dependencies": {
+          "Microsoft.Bcl.AsyncInterfaces": "10.0.5",
+          "Microsoft.ML": "5.0.0",
+          "Newtonsoft.Json": "13.0.3",
+          "System.CodeDom": "9.0.4",
+          "System.Collections.Immutable": "9.0.4",
+          "System.Threading.Channels": "9.0.4"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.ML.FastTree.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "5.0.25.55704"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/linux-x64/native/libFastTreeNative.so": {
+            "rid": "linux-x64",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/linux-x64/native/libFastTreeNative.so.dbg": {
+            "rid": "linux-x64",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/osx-x64/native/libFastTreeNative.dylib": {
+            "rid": "osx-x64",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/osx-x64/native/libFastTreeNative.dylib.dwarf": {
+            "rid": "osx-x64",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/win-x64/native/FastTreeNative.dll": {
+            "rid": "win-x64",
+            "assetType": "native",
+            "fileVersion": "0.2300.25.55704"
+          },
+          "runtimes/win-x86/native/FastTreeNative.dll": {
+            "rid": "win-x86",
+            "assetType": "native",
+            "fileVersion": "0.2300.25.55704"
           }
         }
       },
@@ -656,6 +705,13 @@
       "sha512": "sha512-G8onJ9msBpLYea29WyG+NRV010rg75hJDUIEK3+sSDFAR0OV5p74QjZWnpNbyhT8OkAJdSNkif4l9/iCWZ2LOQ==",
       "path": "microsoft.ml.dataview/5.0.0",
       "hashPath": "microsoft.ml.dataview.5.0.0.nupkg.sha512"
+    },
+    "Microsoft.ML.FastTree/5.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ZcqAHfHlG9AMNlDd5OXuuw2uv+ZWa3c43yf1RNWqIRaLbwsLOpKja7kZ8Q0xkyyo2z9Bb2zKhsHtc8wV1CJojg==",
+      "path": "microsoft.ml.fasttree/5.0.0",
+      "hashPath": "microsoft.ml.fasttree.5.0.0.nupkg.sha512"
     },
     "Microsoft.ML.Mkl.Redist/5.0.0": {
       "type": "package",

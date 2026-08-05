@@ -17,6 +17,7 @@ public class AiController : ControllerBase
     private readonly LearningSettingsService _learningSettings;
     private readonly LottoForecastService _lottoForecast;
     private readonly MinhNgocScrapeSettingsService _minhNgocScrapeSettings;
+    private readonly CoinForecastService _coinForecast;
 
     public AiController(
         MlPredictionService mlService,
@@ -27,7 +28,8 @@ public class AiController : ControllerBase
         ModelLearningService modelLearning,
         LearningSettingsService learningSettings,
         LottoForecastService lottoForecast,
-        MinhNgocScrapeSettingsService minhNgocScrapeSettings)
+        MinhNgocScrapeSettingsService minhNgocScrapeSettings,
+        CoinForecastService coinForecast)
     {
         _mlService = mlService;
         _llamaService = llamaService;
@@ -38,6 +40,7 @@ public class AiController : ControllerBase
         _learningSettings = learningSettings;
         _lottoForecast = lottoForecast;
         _minhNgocScrapeSettings = minhNgocScrapeSettings;
+        _coinForecast = coinForecast;
     }
 
     /// <summary>GET /api/ai/health — kiểm tra nhanh Backend đã chạy OK.</summary>
@@ -198,6 +201,39 @@ public class AiController : ControllerBase
         }
     }
 
+    /// <summary>GET /api/ai/coin/catalog — danh sách coin USDT từ Binance (đầy đủ, có cache).</summary>
+    [HttpGet("coin/catalog")]
+    public async Task<ActionResult<IReadOnlyList<CoinInfoDto>>> GetCoinCatalog(
+        CancellationToken cancellationToken) =>
+        Ok(await _coinForecast.GetCatalogAsync(cancellationToken));
+
+    /// <summary>
+    /// POST /api/ai/coin/run — dự đoán giá nến kế tiếp.
+    /// Thuật toán: Ensemble LightGBM (technical indicators) + SSA (trend).
+    /// </summary>
+    [HttpPost("coin/run")]
+    public async Task<ActionResult<CoinForecastResponse>> RunCoinForecast(
+        [FromBody] CoinRunRequest request,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            return Ok(await _coinForecast.RunAsync(request, cancellationToken));
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (HttpRequestException ex)
+        {
+            return StatusCode(StatusCodes.Status502BadGateway, new { message = ex.Message });
+        }
+    }
+
     /// <summary>
     /// API nhận file upload từ Frontend.
     ///
@@ -256,6 +292,8 @@ public class AiController : ControllerBase
             request.DocumentIds,
             request.ConversationId,
             request.ProfileId,
+            request.EnableWebSearch,
+            request.DeepResearch,
             cancellationToken);
         return Ok(reply);
     }
@@ -272,6 +310,8 @@ public class AiController : ControllerBase
                            request.DocumentIds,
                            request.ConversationId,
                            request.ProfileId,
+                           request.EnableWebSearch,
+                           request.DeepResearch,
                            cancellationToken))
         {
             await Response.WriteAsync(token, cancellationToken);

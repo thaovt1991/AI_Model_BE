@@ -10,7 +10,7 @@ namespace AI_Model_BE.Services;
 
 /// <summary>
 /// Service chat với LLM local qua file .gguf (LLamaSharp).
-/// Có bộ nhớ hội thoại theo profileId (lưu đĩa) + RAG tài liệu nội bộ.
+/// Có bộ nhớ hội thoại theo profileId (lưu đĩa) + RAG tài liệu nội bộ + research mạng.
 /// </summary>
 public sealed class LlamaChatService : IDisposable
 {
@@ -25,6 +25,8 @@ public sealed class LlamaChatService : IDisposable
     private readonly LearningDataCollectorService _learningCollector;
     private readonly ModelLearningService _modelLearning;
     private readonly LottoChatIntentService _lottoChat;
+    private readonly WebResearchService _webResearch;
+    private readonly DeepResearchService _deepResearch;
     private readonly SemaphoreSlim _semaphore = new(1, 1);
 
     private LLamaWeights? _weights;
@@ -44,6 +46,8 @@ public sealed class LlamaChatService : IDisposable
         LearningDataCollectorService learningCollector,
         ModelLearningService modelLearning,
         LottoChatIntentService lottoChat,
+        WebResearchService webResearch,
+        DeepResearchService deepResearch,
         ILogger<LlamaChatService> logger)
     {
         _configuration = configuration;
@@ -53,6 +57,8 @@ public sealed class LlamaChatService : IDisposable
         _learningCollector = learningCollector;
         _modelLearning = modelLearning;
         _lottoChat = lottoChat;
+        _webResearch = webResearch;
+        _deepResearch = deepResearch;
         _logger = logger;
     }
 
@@ -93,6 +99,8 @@ public sealed class LlamaChatService : IDisposable
         IReadOnlyList<Guid>? documentIds = null,
         string? conversationId = null,
         string? profileId = null,
+        bool? enableWebSearch = null,
+        bool deepResearch = false,
         CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(message))
@@ -112,16 +120,26 @@ public sealed class LlamaChatService : IDisposable
                 HistoryTurns: _chatMemory.GetHistoryForPrompt(profileId, conversationId).Count);
         }
 
+        // Hybrid RAG tài liệu + research/deep research mạng
+        var docRetrieval = _documentService.Retrieve(userMessage, documentIds);
+        var researchBundle = await GatherResearchAsync(
+            userMessage, enableWebSearch, deepResearch, cancellationToken);
+        var allCitations = MergeCitations(docRetrieval.Citations, researchBundle.Citations);
+
         await EnsureInitializedAsync(cancellationToken);
 
         if (!_modelAvailable || _executor is null || _weights is null)
         {
-            var mockReply = BuildMockReply(userMessage, documentIds);
+            var mockReply = BuildMockReply(userMessage, docRetrieval, researchBundle);
             RememberTurn(profileId, conversationId, userMessage, mockReply);
             return new ChatResponse(
                 mockReply,
                 IsMock: true,
-                HistoryTurns: _chatMemory.GetHistoryForPrompt(profileId, conversationId).Count);
+                HistoryTurns: _chatMemory.GetHistoryForPrompt(profileId, conversationId).Count,
+                UsedWebResearch: researchBundle.HasWeb,
+                WebSourceCount: researchBundle.WebSourceCount,
+                UsedDeepResearch: researchBundle.IsDeep,
+                Citations: allCitations);
         }
 
         await _semaphore.WaitAsync(cancellationToken);
@@ -129,12 +147,20 @@ public sealed class LlamaChatService : IDisposable
         {
             var sw = Stopwatch.StartNew();
             var (systemPrompt, userContent) = BuildMessages(
-                userMessage, documentIds, history.Count > 0, profileId);
+                userMessage,
+                docRetrieval.ContextBlock,
+                history.Count > 0,
+                profileId,
+                OffsetCitationMarkers(researchBundle.ContextBlock, docRetrieval.Citations.Count),
+                researchBundle.IsDeep);
             var prompt = BuildPrompt(systemPrompt, history, userContent);
             ApplyLearningAdapter();
 
             var replyBuilder = new StringBuilder();
-            await foreach (var token in _executor.InferAsync(prompt, CreateInferenceParams(), cancellationToken))
+            await foreach (var token in _executor.InferAsync(
+                               prompt,
+                               CreateInferenceParams(researchBundle.HasWeb, researchBundle.IsDeep),
+                               cancellationToken))
             {
                 replyBuilder.Append(token);
             }
@@ -148,13 +174,21 @@ public sealed class LlamaChatService : IDisposable
             RememberTurn(profileId, conversationId, userMessage, reply);
 
             _logger.LogInformation(
-                "Chat xong sau {Ms} ms (docs={DocCount}, history={History}, promptLen={PromptLen})",
+                "Chat xong sau {Ms} ms (docs={DocCount}, web={WebCount}, deep={Deep}, history={History}, promptLen={PromptLen})",
                 sw.ElapsedMilliseconds,
-                documentIds?.Count ?? 0,
+                docRetrieval.Citations.Count,
+                researchBundle.WebSourceCount,
+                researchBundle.IsDeep,
                 history.Count,
                 prompt.Length);
 
-            return new ChatResponse(reply, HistoryTurns: _chatMemory.GetHistoryForPrompt(profileId, conversationId).Count);
+            return new ChatResponse(
+                reply,
+                HistoryTurns: _chatMemory.GetHistoryForPrompt(profileId, conversationId).Count,
+                UsedWebResearch: researchBundle.HasWeb,
+                WebSourceCount: researchBundle.WebSourceCount,
+                UsedDeepResearch: researchBundle.IsDeep,
+                Citations: allCitations);
         }
         finally
         {
@@ -167,6 +201,8 @@ public sealed class LlamaChatService : IDisposable
         IReadOnlyList<Guid>? documentIds = null,
         string? conversationId = null,
         string? profileId = null,
+        bool? enableWebSearch = null,
+        bool deepResearch = false,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(message))
@@ -186,11 +222,59 @@ public sealed class LlamaChatService : IDisposable
             yield break;
         }
 
+        // --- Phase RAG tài liệu (nhanh, local) ---
+        yield return ChatStreamMetaCodec.Status("rag", "Đang tìm trong tài liệu nội bộ (Hybrid RAG)...");
+        var docRetrieval = _documentService.Retrieve(userMessage, documentIds);
+        if (docRetrieval.HasResults)
+        {
+            yield return ChatStreamMetaCodec.Status(
+                "rag",
+                $"Đã chọn {docRetrieval.Citations.Count} đoạn tài liệu liên quan.");
+        }
+
+        // --- Phase research mạng ---
+        var wantDeep = deepResearch && _deepResearch.IsEnabled;
+        var wantWeb = wantDeep || _webResearch.ShouldResearch(userMessage, enableWebSearch);
+
+        if (wantDeep)
+        {
+            yield return ChatStreamMetaCodec.Status(
+                "deep_research",
+                "Deep Research: đang chạy nhiều truy vấn phụ trên mạng...");
+        }
+        else if (wantWeb)
+        {
+            yield return ChatStreamMetaCodec.Status("research", "Đang tìm kiếm trên mạng...");
+        }
+
+        var researchBundle = await GatherResearchAsync(
+            userMessage, enableWebSearch, deepResearch, cancellationToken);
+
+        if (wantWeb || wantDeep)
+        {
+            yield return researchBundle.HasWeb
+                ? ChatStreamMetaCodec.Status(
+                    wantDeep ? "deep_research" : "research",
+                    $"Đã có {researchBundle.WebSourceCount} nguồn web. Đang suy luận...")
+                : ChatStreamMetaCodec.Status(
+                    wantDeep ? "deep_research" : "research",
+                    "Không lấy được nguồn mạng đáng tin — trả lời theo kiến thức/tài liệu sẵn có.");
+        }
+
+        var allCitations = MergeCitations(docRetrieval.Citations, researchBundle.Citations);
+        if (allCitations.Count > 0)
+        {
+            // Gửi citation cho UI TRƯỚC khi stream token — bubble hiện nguồn ngay
+            yield return ChatStreamMetaCodec.Citations(allCitations);
+        }
+
+        yield return ChatStreamMetaCodec.Status("thinking", "Đang sinh câu trả lời...");
+
         await EnsureInitializedAsync(cancellationToken);
 
         if (!_modelAvailable || _executor is null || _weights is null)
         {
-            var mockReply = BuildMockReply(userMessage, documentIds);
+            var mockReply = BuildMockReply(userMessage, docRetrieval, researchBundle);
             RememberTurn(profileId, conversationId, userMessage, mockReply);
             yield return mockReply;
             yield break;
@@ -205,12 +289,20 @@ public sealed class LlamaChatService : IDisposable
         try
         {
             var (systemPrompt, userContent) = BuildMessages(
-                userMessage, documentIds, history.Count > 0, profileId);
+                userMessage,
+                docRetrieval.ContextBlock,
+                history.Count > 0,
+                profileId,
+                OffsetCitationMarkers(researchBundle.ContextBlock, docRetrieval.Citations.Count),
+                researchBundle.IsDeep);
             var prompt = BuildPrompt(systemPrompt, history, userContent);
             promptLen = prompt.Length;
             ApplyLearningAdapter();
 
-            await foreach (var token in _executor.InferAsync(prompt, CreateInferenceParams(), cancellationToken))
+            await foreach (var token in _executor.InferAsync(
+                               prompt,
+                               CreateInferenceParams(researchBundle.HasWeb, researchBundle.IsDeep),
+                               cancellationToken))
             {
                 tokenCount++;
                 replyBuilder.Append(token);
@@ -222,10 +314,12 @@ public sealed class LlamaChatService : IDisposable
             _semaphore.Release();
             RememberTurn(profileId, conversationId, userMessage, replyBuilder.ToString().Trim());
             _logger.LogInformation(
-                "Stream chat xong sau {Ms} ms — {Tokens} token (docs={DocCount}, history={History}, promptLen={PromptLen})",
+                "Stream chat xong sau {Ms} ms — {Tokens} token (docs={DocCount}, web={WebCount}, deep={Deep}, history={History}, promptLen={PromptLen})",
                 sw.ElapsedMilliseconds,
                 tokenCount,
-                documentIds?.Count ?? 0,
+                docRetrieval.Citations.Count,
+                researchBundle.WebSourceCount,
+                researchBundle.IsDeep,
                 history.Count,
                 promptLen);
         }
@@ -322,9 +416,17 @@ public sealed class LlamaChatService : IDisposable
         return LLamaTemplate.Encoding.GetString(template.Apply());
     }
 
-    private InferenceParams CreateInferenceParams()
+    private InferenceParams CreateInferenceParams(bool usedWebResearch = false, bool deepResearch = false)
     {
         var maxTokens = _configuration.GetValue("Llama:MaxTokens", 256);
+        if (deepResearch)
+        {
+            maxTokens = Math.Max(maxTokens, _configuration.GetValue("DeepResearch:MaxTokens", 512));
+        }
+        else if (usedWebResearch)
+        {
+            maxTokens = Math.Max(maxTokens, _configuration.GetValue("WebResearch:MaxTokens", 384));
+        }
 
         return new InferenceParams
         {
@@ -333,32 +435,159 @@ public sealed class LlamaChatService : IDisposable
         };
     }
 
+    /// <summary>
+    /// Gom research thường hoặc Deep Research thành 1 bundle context + citations.
+    /// Deep Research luôn bật web; research thường tôn trọng EnableWebSearch/AutoDetect.
+    /// </summary>
+    private async Task<ResearchBundle> GatherResearchAsync(
+        string userMessage,
+        bool? enableWebSearch,
+        bool deepResearch,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            if (deepResearch && _deepResearch.IsEnabled)
+            {
+                var deep = await _deepResearch.ResearchAsync(userMessage, cancellationToken);
+                return new ResearchBundle(
+                    deep.HasResults,
+                    IsDeep: true,
+                    deep.Citations.Count,
+                    deep.ContextBlock,
+                    deep.Citations);
+            }
+
+            if (!_webResearch.ShouldResearch(userMessage, enableWebSearch))
+            {
+                return ResearchBundle.Empty;
+            }
+
+            var normal = await _webResearch.ResearchAsync(userMessage, cancellationToken);
+            var citations = normal.ToCitations();
+            return new ResearchBundle(
+                normal.HasResults,
+                IsDeep: false,
+                citations.Count,
+                normal.ContextBlock,
+                citations);
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Gather research thất bại cho: {Message}", userMessage);
+            return ResearchBundle.Empty;
+        }
+    }
+
+    /// <summary>
+    /// Gộp citation tài liệu + web, đánh lại Id liên tục [1]..[N] để khớp prompt.
+    /// </summary>
+    private static IReadOnlyList<CitationSource> MergeCitations(
+        IReadOnlyList<CitationSource> docs,
+        IReadOnlyList<CitationSource> web)
+    {
+        var merged = new List<CitationSource>();
+        var id = 1;
+        foreach (var c in docs)
+        {
+            merged.Add(CloneCitation(c, id++));
+        }
+
+        foreach (var c in web)
+        {
+            merged.Add(CloneCitation(c, id++));
+        }
+
+        return merged;
+    }
+
+    private static CitationSource CloneCitation(CitationSource c, int id) => new()
+    {
+        Id = id,
+        Kind = c.Kind,
+        Title = c.Title,
+        Url = c.Url,
+        FileName = c.FileName,
+        ChunkIndex = c.ChunkIndex,
+        Snippet = c.Snippet,
+        Score = c.Score,
+        SourceLabel = c.SourceLabel
+    };
+
+    /// <summary>
+    /// Tài liệu dùng [1]..[D]; web vốn cũng bắt đầu từ [1] → lệch số.
+    /// Cộng offset = số citation tài liệu để khớp danh sách MergeCitations trên UI.
+    /// </summary>
+    private static string OffsetCitationMarkers(string? context, int offset)
+    {
+        if (string.IsNullOrWhiteSpace(context) || offset <= 0)
+        {
+            return context ?? string.Empty;
+        }
+
+        return System.Text.RegularExpressions.Regex.Replace(
+            context,
+            @"\[(\d+)\]",
+            m => $"[{int.Parse(m.Groups[1].Value) + offset}]");
+    }
+
     private (string systemPrompt, string userContent) BuildMessages(
         string userMessage,
-        IReadOnlyList<Guid>? documentIds,
+        string? documentContext,
         bool hasHistory,
-        string? profileId)
+        string? profileId,
+        string? webResearchContext = null,
+        bool isDeepResearch = false)
     {
-        var documentContext = _documentService.BuildContextForQuery(userMessage, documentIds);
         var aiName = _profileSettings.GetAiName(profileId);
+        var hasDocs = !string.IsNullOrWhiteSpace(documentContext);
+        var hasWeb = !string.IsNullOrWhiteSpace(webResearchContext);
 
         string systemPrompt;
-        if (string.IsNullOrWhiteSpace(documentContext))
+        if (isDeepResearch && hasWeb)
         {
             systemPrompt = string.IsNullOrWhiteSpace(aiName)
-                ? "Bạn là trợ lý AI chạy local. Trả lời ngắn gọn, đúng trọng tâm bằng tiếng Việt."
-                : $"Bạn tên là {aiName}. Bạn là trợ lý AI chạy local. Khi được hỏi tên, hãy trả lời là {aiName}. " +
-                  "Trả lời ngắn gọn, đúng trọng tâm bằng tiếng Việt.";
+                ? "Bạn là trợ lý AI nghiên cứu sâu. Tổng hợp nhiều nguồn web, nêu điểm đồng thuận/mâu thuẫn, " +
+                  "trích dẫn bằng [1], [2]... Trả lời có cấu trúc (tóm tắt → chi tiết → kết luận). Tiếng Việt. Không bịa số liệu."
+                : $"Bạn tên là {aiName}. Bạn là trợ lý AI nghiên cứu sâu. Khi được hỏi tên, hãy trả lời là {aiName}. " +
+                  "Tổng hợp nhiều nguồn web, nêu điểm đồng thuận/mâu thuẫn, trích dẫn bằng [1], [2]... " +
+                  "Trả lời có cấu trúc. Tiếng Việt. Không bịa số liệu.";
+        }
+        else if (hasDocs && hasWeb)
+        {
+            systemPrompt = string.IsNullOrWhiteSpace(aiName)
+                ? "Bạn là trợ lý AI thông minh. Ưu tiên tài liệu nội bộ; bổ sung bằng kết quả tìm kiếm web khi cần. " +
+                  "Trích dẫn [n] khi dùng nguồn. Trả lời rõ ràng bằng tiếng Việt."
+                : $"Bạn tên là {aiName}. Bạn là trợ lý AI thông minh. Khi được hỏi tên, hãy trả lời là {aiName}. " +
+                  "Ưu tiên tài liệu nội bộ; bổ sung bằng web. Trích dẫn [n] khi dùng nguồn. Tiếng Việt.";
+        }
+        else if (hasDocs)
+        {
+            systemPrompt = string.IsNullOrWhiteSpace(aiName)
+                ? "Bạn là trợ lý AI phân tích tài liệu nội bộ (Hybrid RAG). Chỉ trả lời dựa trên tài liệu được cung cấp. " +
+                  "Trích dẫn [n]. Nếu không có trong tài liệu, nói rõ. Tiếng Việt."
+                : $"Bạn tên là {aiName}. Bạn là trợ lý AI phân tích tài liệu nội bộ. Khi được hỏi tên, hãy trả lời là {aiName}. " +
+                  "Chỉ trả lời dựa trên tài liệu. Trích dẫn [n]. Tiếng Việt.";
+        }
+        else if (hasWeb)
+        {
+            systemPrompt = string.IsNullOrWhiteSpace(aiName)
+                ? "Bạn là trợ lý AI có research mạng. Dựa vào kết quả web, nêu nguồn [n], không bịa số liệu. Tiếng Việt."
+                : $"Bạn tên là {aiName}. Bạn là trợ lý AI có research mạng. Khi được hỏi tên, hãy trả lời là {aiName}. " +
+                  "Dựa vào kết quả web, nêu nguồn [n], không bịa số liệu. Tiếng Việt.";
         }
         else
         {
             systemPrompt = string.IsNullOrWhiteSpace(aiName)
-                ? "Bạn là trợ lý AI phân tích tài liệu nội bộ. Chỉ trả lời dựa trên tài liệu được cung cấp. " +
-                  "Nếu thông tin không có trong tài liệu, hãy nói rõ là không tìm thấy trong tài liệu nội bộ. " +
-                  "Trả lời ngắn gọn bằng tiếng Việt."
-                : $"Bạn tên là {aiName}. Bạn là trợ lý AI phân tích tài liệu nội bộ. Khi được hỏi tên, hãy trả lời là {aiName}. " +
-                  "Chỉ trả lời dựa trên tài liệu được cung cấp. Nếu thông tin không có trong tài liệu, hãy nói rõ là không tìm thấy trong tài liệu nội bộ. " +
-                  "Trả lời ngắn gọn bằng tiếng Việt.";
+                ? "Bạn là trợ lý AI chạy local, thông minh và hữu ích. Suy nghĩ từng bước khi cần, trả lời đúng trọng tâm bằng tiếng Việt. " +
+                  "Nếu thiếu dữ liệu thời sự/cập nhật, hãy nói rõ giới hạn kiến thức."
+                : $"Bạn tên là {aiName}. Bạn là trợ lý AI chạy local, thông minh và hữu ích. Khi được hỏi tên, hãy trả lời là {aiName}. " +
+                  "Suy nghĩ từng bước khi cần, trả lời đúng trọng tâm bằng tiếng Việt. " +
+                  "Nếu thiếu dữ liệu thời sự/cập nhật, hãy nói rõ giới hạn kiến thức.";
         }
 
         if (hasHistory)
@@ -371,11 +600,33 @@ public sealed class LlamaChatService : IDisposable
             systemPrompt += " Người dùng có thể hỏi xổ số — gợi ý họ dùng câu như: \"Dự đoán XSMB\", \"Lô gan TP HCM\", \"Lịch sử miền Nam 7 ngày\".";
         }
 
-        var userContent = string.IsNullOrWhiteSpace(documentContext)
+        var parts = new List<string>();
+        if (hasDocs)
+        {
+            parts.Add(documentContext!);
+        }
+
+        if (hasWeb)
+        {
+            parts.Add(webResearchContext!);
+        }
+
+        var userContent = parts.Count == 0
             ? userMessage
-            : $"{documentContext}\n\nCâu hỏi: {userMessage}";
+            : $"{string.Join("\n\n", parts)}\n\nCâu hỏi: {userMessage}";
 
         return (systemPrompt, userContent);
+    }
+
+    private sealed record ResearchBundle(
+        bool HasWeb,
+        bool IsDeep,
+        int WebSourceCount,
+        string ContextBlock,
+        IReadOnlyList<CitationSource> Citations)
+    {
+        public static ResearchBundle Empty { get; } =
+            new(false, false, 0, string.Empty, Array.Empty<CitationSource>());
     }
 
     private void RememberTurn(
@@ -492,20 +743,40 @@ public sealed class LlamaChatService : IDisposable
         }
     }
 
-    private string BuildMockReply(string message, IReadOnlyList<Guid>? documentIds)
+    private string BuildMockReply(
+        string message,
+        DocumentRetrievalResult docRetrieval,
+        ResearchBundle research)
     {
-        var context = _documentService.BuildContextForQuery(message, documentIds);
-        if (!string.IsNullOrWhiteSpace(context))
+        var context = docRetrieval.ContextBlock;
+        var web = research.HasWeb ? research.ContextBlock : null;
+
+        if (!string.IsNullOrWhiteSpace(context) || !string.IsNullOrWhiteSpace(web))
         {
-            return $"[Chế độ mock — chưa có LLM .gguf]\n" +
-                   $"Đã tìm thấy ngữ cảnh từ tài liệu nội bộ:\n\n{context}\n\n" +
-                   $"Câu hỏi của bạn: \"{message}\"\n" +
-                   "Hãy cấu hình file .gguf để AI trả lời phân tích đầy đủ.";
+            var sb = new StringBuilder();
+            sb.AppendLine("[Chế độ mock — chưa có LLM .gguf]");
+            if (!string.IsNullOrWhiteSpace(context))
+            {
+                sb.AppendLine("Ngữ cảnh Hybrid RAG (tài liệu):");
+                sb.AppendLine(context);
+                sb.AppendLine();
+            }
+
+            if (!string.IsNullOrWhiteSpace(web))
+            {
+                sb.AppendLine(research.IsDeep ? "Deep Research:" : "Research mạng:");
+                sb.AppendLine(web);
+                sb.AppendLine();
+            }
+
+            sb.AppendLine($"Câu hỏi của bạn: \"{message}\"");
+            sb.Append("Hãy cấu hình file .gguf để AI phân tích đầy đủ.");
+            return sb.ToString();
         }
 
         return $"[Chế độ mock — chưa có file .gguf]\n" +
                $"Bạn hỏi: \"{message}\"\n" +
-               "Hãy đặt file model vào thư mục Models/ hoặc hỏi xổ số: \"Dự đoán XSMB\", \"Lô gan TP HCM\", \"Lịch sử miền Nam 7 ngày\".";
+               "Hãy đặt file model vào thư mục Models/. Bật Research / Deep Research trên UI khi có model.";
     }
 
     public void Dispose()

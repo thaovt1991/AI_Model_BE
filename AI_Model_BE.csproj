@@ -17,6 +17,7 @@
     <PackageReference Include="LLamaSharp.Backend.Cpu" Version="0.27.0" />
     <!-- Microsoft.ML: ML.NET, dùng cho học máy truyền thống như regression/classification trong .NET. -->
     <PackageReference Include="Microsoft.ML" Version="5.0.0" />
+    <PackageReference Include="Microsoft.ML.FastTree" Version="5.0.0" />
     <PackageReference Include="Microsoft.ML.TimeSeries" Version="5.0.0" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.72" />
     <!-- DocumentFormat.OpenXml: đọc Word (.docx) và Excel (.xlsx) — file Office thực chất là ZIP chứa XML. -->
