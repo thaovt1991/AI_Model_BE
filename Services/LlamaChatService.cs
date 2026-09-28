@@ -5,6 +5,7 @@ using AI_Model_BE.Models;
 using LLama;
 using LLama.Common;
 using LLama.Native;
+using LLama.Sampling;
 
 namespace AI_Model_BE.Services;
 
@@ -73,8 +74,7 @@ public sealed class LlamaChatService : IDisposable
             return;
         }
 
-        var inference = CreateInferenceParams();
-        inference.MaxTokens = 1;
+        var inference = CreateInferenceParams(1);
 
         await _semaphore.WaitAsync(cancellationToken);
         try
@@ -120,6 +120,16 @@ public sealed class LlamaChatService : IDisposable
                 HistoryTurns: _chatMemory.GetHistoryForPrompt(profileId, conversationId).Count);
         }
 
+        var turnKind = ChatTurnPlanner.Classify(userMessage);
+        if (turnKind == ChatTurnPlanner.Kind.Instant)
+        {
+            var instant = ChatTurnPlanner.BuildInstantReply(userMessage, _profileSettings.GetAiName(profileId));
+            RememberTurn(profileId, conversationId, userMessage, instant);
+            return new ChatResponse(
+                instant,
+                HistoryTurns: _chatMemory.GetHistoryForPrompt(profileId, conversationId).Count);
+        }
+
         // Hybrid RAG tài liệu + research/deep research mạng
         var docRetrieval = _documentService.Retrieve(userMessage, documentIds);
         var researchBundle = await GatherResearchAsync(
@@ -152,14 +162,15 @@ public sealed class LlamaChatService : IDisposable
                 history.Count > 0,
                 profileId,
                 OffsetCitationMarkers(researchBundle.ContextBlock, docRetrieval.Citations.Count),
-                researchBundle.IsDeep);
+                researchBundle.IsDeep,
+                turnKind);
             var prompt = BuildPrompt(systemPrompt, history, userContent);
             ApplyLearningAdapter();
 
             var replyBuilder = new StringBuilder();
             await foreach (var token in _executor.InferAsync(
                                prompt,
-                               CreateInferenceParams(researchBundle.HasWeb, researchBundle.IsDeep),
+                               CreateInferenceParams(ResolveMaxTokens(turnKind, researchBundle.HasWeb, researchBundle.IsDeep)),
                                cancellationToken))
             {
                 replyBuilder.Append(token);
@@ -222,14 +233,27 @@ public sealed class LlamaChatService : IDisposable
             yield break;
         }
 
-        // --- Phase RAG tài liệu (nhanh, local) ---
-        yield return ChatStreamMetaCodec.Status("rag", "Đang tìm trong tài liệu nội bộ (Hybrid RAG)...");
-        var docRetrieval = _documentService.Retrieve(userMessage, documentIds);
-        if (docRetrieval.HasResults)
+        var turnKind = ChatTurnPlanner.Classify(userMessage);
+        if (turnKind == ChatTurnPlanner.Kind.Instant)
         {
-            yield return ChatStreamMetaCodec.Status(
-                "rag",
-                $"Đã chọn {docRetrieval.Citations.Count} đoạn tài liệu liên quan.");
+            var instant = ChatTurnPlanner.BuildInstantReply(userMessage, _profileSettings.GetAiName(profileId));
+            RememberTurn(profileId, conversationId, userMessage, instant);
+            yield return instant;
+            yield break;
+        }
+
+        // --- Phase RAG tài liệu (nhanh, local) — bỏ qua khi không chọn file ---
+        var docRetrieval = new DocumentRetrievalResult();
+        if (documentIds is { Count: > 0 })
+        {
+            yield return ChatStreamMetaCodec.Status("rag", "Đang tìm trong tài liệu nội bộ (Hybrid RAG)...");
+            docRetrieval = _documentService.Retrieve(userMessage, documentIds);
+            if (docRetrieval.HasResults)
+            {
+                yield return ChatStreamMetaCodec.Status(
+                    "rag",
+                    $"Đã chọn {docRetrieval.Citations.Count} đoạn tài liệu liên quan.");
+            }
         }
 
         // --- Phase research mạng ---
@@ -294,14 +318,15 @@ public sealed class LlamaChatService : IDisposable
                 history.Count > 0,
                 profileId,
                 OffsetCitationMarkers(researchBundle.ContextBlock, docRetrieval.Citations.Count),
-                researchBundle.IsDeep);
+                researchBundle.IsDeep,
+                turnKind);
             var prompt = BuildPrompt(systemPrompt, history, userContent);
             promptLen = prompt.Length;
             ApplyLearningAdapter();
 
             await foreach (var token in _executor.InferAsync(
                                prompt,
-                               CreateInferenceParams(researchBundle.HasWeb, researchBundle.IsDeep),
+                               CreateInferenceParams(ResolveMaxTokens(turnKind, researchBundle.HasWeb, researchBundle.IsDeep)),
                                cancellationToken))
             {
                 tokenCount++;
@@ -408,31 +433,65 @@ public sealed class LlamaChatService : IDisposable
 
         foreach (var turn in history)
         {
-            template.Add("user", turn.UserMessage);
-            template.Add("assistant", turn.AssistantReply);
+            // Cắt lịch sử để prefill CPU ngắn hơn — câu trả lời cũ rất dài làm lượt sau chậm và lệch.
+            template.Add("user", ClipForPrompt(turn.UserMessage, 360));
+            template.Add("assistant", ClipForPrompt(turn.AssistantReply, 420));
         }
 
         template.Add("user", userContent);
         return LLamaTemplate.Encoding.GetString(template.Apply());
     }
 
-    private InferenceParams CreateInferenceParams(bool usedWebResearch = false, bool deepResearch = false)
+    private int ResolveMaxTokens(ChatTurnPlanner.Kind kind, bool usedWebResearch, bool deepResearch)
     {
-        var maxTokens = _configuration.GetValue("Llama:MaxTokens", 256);
+        var cap = _configuration.GetValue("Llama:MaxTokens", 160);
         if (deepResearch)
         {
-            maxTokens = Math.Max(maxTokens, _configuration.GetValue("DeepResearch:MaxTokens", 512));
-        }
-        else if (usedWebResearch)
-        {
-            maxTokens = Math.Max(maxTokens, _configuration.GetValue("WebResearch:MaxTokens", 384));
+            return _configuration.GetValue("DeepResearch:MaxTokens", 240);
         }
 
+        if (usedWebResearch || kind == ChatTurnPlanner.Kind.Factual)
+        {
+            return _configuration.GetValue("WebResearch:MaxTokens", 180);
+        }
+
+        if (kind == ChatTurnPlanner.Kind.Explain)
+        {
+            return _configuration.GetValue("Llama:ExplainMaxTokens", 220);
+        }
+
+        return Math.Min(cap, _configuration.GetValue("Llama:BriefMaxTokens", 96));
+    }
+
+    private InferenceParams CreateInferenceParams(int maxTokens)
+    {
         return new InferenceParams
         {
             MaxTokens = maxTokens,
-            AntiPrompts = ["<|eot_id|>", "<|end_of_text|>"]
+            AntiPrompts = ["<|eot_id|>", "<|end_of_text|>", "<|end|>"],
+            // Nhiệt độ thấp + phạt lặp: bớt bịa, bớt nhắc lại nguồn.
+            SamplingPipeline = new DefaultSamplingPipeline
+            {
+                Temperature = _configuration.GetValue("Llama:Temperature", 0.35f),
+                TopK = _configuration.GetValue("Llama:TopK", 40),
+                TopP = _configuration.GetValue("Llama:TopP", 0.9f),
+                MinP = _configuration.GetValue("Llama:MinP", 0.05f),
+                RepeatPenalty = _configuration.GetValue("Llama:RepeatPenalty", 1.12f),
+                FrequencyPenalty = _configuration.GetValue("Llama:FrequencyPenalty", 0.2f),
+                PresencePenalty = _configuration.GetValue("Llama:PresencePenalty", 0.1f),
+                PenaltyCount = _configuration.GetValue("Llama:PenaltyCount", 128)
+            }
         };
+    }
+
+    private static string ClipForPrompt(string text, int maxChars)
+    {
+        if (string.IsNullOrEmpty(text) || text.Length <= maxChars)
+        {
+            return text;
+        }
+
+        return text[..maxChars].TrimEnd() + "…";
     }
 
     /// <summary>
@@ -541,64 +600,14 @@ public sealed class LlamaChatService : IDisposable
         bool hasHistory,
         string? profileId,
         string? webResearchContext = null,
-        bool isDeepResearch = false)
+        bool isDeepResearch = false,
+        ChatTurnPlanner.Kind kind = ChatTurnPlanner.Kind.Brief)
     {
         var aiName = _profileSettings.GetAiName(profileId);
         var hasDocs = !string.IsNullOrWhiteSpace(documentContext);
         var hasWeb = !string.IsNullOrWhiteSpace(webResearchContext);
-
-        string systemPrompt;
-        if (isDeepResearch && hasWeb)
-        {
-            systemPrompt = string.IsNullOrWhiteSpace(aiName)
-                ? "Bạn là trợ lý AI nghiên cứu sâu. Tổng hợp nhiều nguồn web, nêu điểm đồng thuận/mâu thuẫn, " +
-                  "trích dẫn bằng [1], [2]... Trả lời có cấu trúc (tóm tắt → chi tiết → kết luận). Tiếng Việt. Không bịa số liệu."
-                : $"Bạn tên là {aiName}. Bạn là trợ lý AI nghiên cứu sâu. Khi được hỏi tên, hãy trả lời là {aiName}. " +
-                  "Tổng hợp nhiều nguồn web, nêu điểm đồng thuận/mâu thuẫn, trích dẫn bằng [1], [2]... " +
-                  "Trả lời có cấu trúc. Tiếng Việt. Không bịa số liệu.";
-        }
-        else if (hasDocs && hasWeb)
-        {
-            systemPrompt = string.IsNullOrWhiteSpace(aiName)
-                ? "Bạn là trợ lý AI thông minh. Ưu tiên tài liệu nội bộ; bổ sung bằng kết quả tìm kiếm web khi cần. " +
-                  "Trích dẫn [n] khi dùng nguồn. Trả lời rõ ràng bằng tiếng Việt."
-                : $"Bạn tên là {aiName}. Bạn là trợ lý AI thông minh. Khi được hỏi tên, hãy trả lời là {aiName}. " +
-                  "Ưu tiên tài liệu nội bộ; bổ sung bằng web. Trích dẫn [n] khi dùng nguồn. Tiếng Việt.";
-        }
-        else if (hasDocs)
-        {
-            systemPrompt = string.IsNullOrWhiteSpace(aiName)
-                ? "Bạn là trợ lý AI phân tích tài liệu nội bộ (Hybrid RAG). Chỉ trả lời dựa trên tài liệu được cung cấp. " +
-                  "Trích dẫn [n]. Nếu không có trong tài liệu, nói rõ. Tiếng Việt."
-                : $"Bạn tên là {aiName}. Bạn là trợ lý AI phân tích tài liệu nội bộ. Khi được hỏi tên, hãy trả lời là {aiName}. " +
-                  "Chỉ trả lời dựa trên tài liệu. Trích dẫn [n]. Tiếng Việt.";
-        }
-        else if (hasWeb)
-        {
-            systemPrompt = string.IsNullOrWhiteSpace(aiName)
-                ? "Bạn là trợ lý AI có research mạng. Dựa vào kết quả web, nêu nguồn [n], không bịa số liệu. Tiếng Việt."
-                : $"Bạn tên là {aiName}. Bạn là trợ lý AI có research mạng. Khi được hỏi tên, hãy trả lời là {aiName}. " +
-                  "Dựa vào kết quả web, nêu nguồn [n], không bịa số liệu. Tiếng Việt.";
-        }
-        else
-        {
-            systemPrompt = string.IsNullOrWhiteSpace(aiName)
-                ? "Bạn là trợ lý AI chạy local, thông minh và hữu ích. Suy nghĩ từng bước khi cần, trả lời đúng trọng tâm bằng tiếng Việt. " +
-                  "Nếu thiếu dữ liệu thời sự/cập nhật, hãy nói rõ giới hạn kiến thức."
-                : $"Bạn tên là {aiName}. Bạn là trợ lý AI chạy local, thông minh và hữu ích. Khi được hỏi tên, hãy trả lời là {aiName}. " +
-                  "Suy nghĩ từng bước khi cần, trả lời đúng trọng tâm bằng tiếng Việt. " +
-                  "Nếu thiếu dữ liệu thời sự/cập nhật, hãy nói rõ giới hạn kiến thức.";
-        }
-
-        if (hasHistory)
-        {
-            systemPrompt += " Nhớ ngữ cảnh các lượt hội thoại trước trong phiên này để trả lời nhất quán.";
-        }
-
-        if (_lottoChat.IsLottoRelated(userMessage))
-        {
-            systemPrompt += " Người dùng có thể hỏi xổ số — gợi ý họ dùng câu như: \"Dự đoán XSMB\", \"Lô gan TP HCM\", \"Lịch sử miền Nam 7 ngày\".";
-        }
+        var systemPrompt = ChatTurnPlanner.BuildSystemPrompt(
+            kind, aiName, hasDocs, hasWeb, isDeepResearch, hasHistory);
 
         var parts = new List<string>();
         if (hasDocs)

@@ -555,4 +555,3 @@ D:\Job\Model AI\AI_Model_BE\bin\Debug\net8.0\runtimes\osx-x64\native\libFastTree
 D:\Job\Model AI\AI_Model_BE\bin\Debug\net8.0\runtimes\osx-x64\native\libFastTreeNative.dylib.dwarf
 D:\Job\Model AI\AI_Model_BE\bin\Debug\net8.0\runtimes\win-x64\native\FastTreeNative.dll
 D:\Job\Model AI\AI_Model_BE\bin\Debug\net8.0\runtimes\win-x86\native\FastTreeNative.dll
-D:\Job\Model AI\AI_Model_BE\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

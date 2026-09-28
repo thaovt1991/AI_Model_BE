@@ -17,11 +17,20 @@ public sealed class WebResearchService
 
     private static readonly Regex NeedsResearchRegex = new(
         @"\b(tin\s*tức|thời\s*sự|hôm\s*nay|hiện\s*nay|mới\s*nhất|cập\s*nhật|" +
-        @"năm\s*20\d{2}|202[4-9]|203\d|giá\s*(vàng|bitcoin|btc|usd|đô|xăng)|" +
+        @"năm\s*20\d{2}|202[4-9]|203\d|" +
+        @"giá\s*(vàng|bitcoin|btc|usd|đô|xăng|sjc|nhẫn)|nhiêu\s*tiền|bao\s*nhiêu|" +
         @"thời\s*tiết|tỷ\s*giá|chứng\s*khoán|bóng\s*đá|kết\s*quả|" +
-        @"who\s+is|what\s+is|latest|news|current|today|research|" +
-        @"tìm\s*kiếm|tra\s*cứu|nghiên\s*cứu|search|web|internet|mạng)\b",
+        @"latest|news|current|today|" +
+        @"thắng|thua|tỷ\s*số|mấy\s*không|mấy\s*-?\s*mấy|" +
+        @"chỉ\s*vàng|bitcoin|ethereum|world\s*cup|sea\s*games)\b",
         RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Compiled);
+
+    private static readonly HashSet<string> QueryStopwords = new(StringComparer.Ordinal)
+    {
+        "hom", "nay", "the", "nao", "khong", "may", "bao", "nhieu", "cua", "cho", "voi",
+        "mot", "cac", "nhu", "thi", "la", "va", "hay", "ban", "minh", "toi", "day",
+        "kia", "nhe", "xem", "hoi", "giup", "lam", "sao", "nao", "duoc", "trong", "tren"
+    };
 
     private static readonly Regex StripTagsRegex = new("<[^>]+>", RegexOptions.Compiled);
     private static readonly Regex MultiSpaceRegex = new(@"\s{2,}", RegexOptions.Compiled);
@@ -95,37 +104,24 @@ public sealed class WebResearchService
         var fetchPages = _configuration.GetValue("WebResearch:FetchPageContent", true);
         var maxPages = _configuration.GetValue("WebResearch:MaxPagesToFetch", 2);
 
-        var findings = new List<WebFinding>();
         var q = query.Trim();
+        var instantTask = SafeSearchAsync(
+            () => SearchDuckDuckGoInstantAsync(q, maxSnippetChars, cancellationToken),
+            "DuckDuckGo Instant Answer",
+            q);
+        var htmlTask = SafeSearchAsync(
+            () => SearchDuckDuckGoHtmlAsync(q, maxResults, maxSnippetChars, cancellationToken),
+            "DuckDuckGo HTML",
+            q);
+        var wikiTask = SafeSearchAsync(
+            () => SearchWikipediaAsync(q, maxResults: 2, maxSnippetChars, cancellationToken),
+            "Wikipedia",
+            q);
 
-        try
-        {
-            findings.AddRange(await SearchDuckDuckGoInstantAsync(q, maxSnippetChars, cancellationToken));
-        }
-        catch (Exception ex)
-        {
-            _logger.LogWarning(ex, "DuckDuckGo Instant Answer lỗi cho query: {Query}", q);
-        }
-
-        try
-        {
-            findings.AddRange(await SearchDuckDuckGoHtmlAsync(q, maxResults, maxSnippetChars, cancellationToken));
-        }
-        catch (Exception ex)
-        {
-            _logger.LogWarning(ex, "DuckDuckGo HTML search lỗi cho query: {Query}", q);
-        }
-
-        try
-        {
-            findings.AddRange(await SearchWikipediaAsync(q, maxResults: 2, maxSnippetChars, cancellationToken));
-        }
-        catch (Exception ex)
-        {
-            _logger.LogWarning(ex, "Wikipedia search lỗi cho query: {Query}", q);
-        }
-
-        findings = Deduplicate(findings).Take(maxResults).ToList();
+        var batches = await Task.WhenAll(instantTask, htmlTask, wikiTask);
+        var findings = PreferRelevant(q, Deduplicate(batches.SelectMany(b => b).ToList()))
+            .Take(maxResults)
+            .ToList();
 
         if (fetchPages && findings.Count > 0)
         {
@@ -447,9 +443,9 @@ public sealed class WebResearchService
     private static string BuildContextBlock(string query, IReadOnlyList<WebFinding> findings, int maxContextChars)
     {
         var sb = new StringBuilder();
-        sb.AppendLine("=== KẾT QUẢ TÌM KIẾM WEB (cập nhật từ mạng) ===");
-        sb.AppendLine($"Truy vấn: {query}");
-        sb.AppendLine($"Thời điểm: {DateTimeOffset.Now:yyyy-MM-dd HH:mm} (local)");
+        sb.AppendLine("=== NGUỒN WEB ===");
+        sb.AppendLine("Chỉ dùng số liệu có trong các đoạn dưới. Không có đáp án thì bỏ qua, đừng suy diễn.");
+        sb.AppendLine($"Truy vấn: {query} | {DateTimeOffset.Now:yyyy-MM-dd HH:mm}");
         sb.AppendLine();
 
         for (var i = 0; i < findings.Count; i++)
@@ -485,6 +481,86 @@ public sealed class WebResearchService
         sb.AppendLine("=== HẾT KẾT QUẢ WEB ===");
         sb.AppendLine("Hãy ưu tiên thông tin trên khi trả lời. Nêu nguồn nếu có thể. Nếu dữ liệu mâu thuẫn hoặc thiếu, nói rõ.");
         return sb.ToString().Trim();
+    }
+
+    private async Task<List<WebFinding>> SafeSearchAsync(
+        Func<Task<List<WebFinding>>> search,
+        string source,
+        string query)
+    {
+        try
+        {
+            return await search();
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "{Source} lỗi cho query: {Query}", source, query);
+            return [];
+        }
+    }
+
+    /// <summary>
+    /// Giữ snippet có từ khóa của câu hỏi. Nguồn lệch chủ đề bị bỏ
+    /// để model không "phán" trên đoạn không liên quan.
+    /// Nếu không đoạn nào khớp, trả về rỗng (model sẽ nói không có số liệu).
+    /// </summary>
+    private static List<WebFinding> PreferRelevant(string query, List<WebFinding> findings)
+    {
+        if (findings.Count == 0)
+        {
+            return findings;
+        }
+
+        var tokens = QueryTokens(query);
+        if (tokens.Count == 0)
+        {
+            return findings;
+        }
+
+        var ranked = findings
+            .Select(f => (Finding: f, Score: OverlapScore(tokens, f)))
+            .OrderByDescending(x => x.Score)
+            .ToList();
+
+        var matched = ranked.Where(x => x.Score > 0).Select(x => x.Finding).ToList();
+        return matched;
+    }
+
+    private static int OverlapScore(IReadOnlyList<string> tokens, WebFinding finding)
+    {
+        var hay = ChatTurnPlanner.Fold($"{finding.Title} {finding.Snippet}");
+        var score = 0;
+        foreach (var token in tokens)
+        {
+            if (hay.Contains(token, StringComparison.Ordinal))
+            {
+                score += token.Length >= 5 ? 2 : 1;
+            }
+        }
+
+        return score;
+    }
+
+    private static List<string> QueryTokens(string query)
+    {
+        var folded = ChatTurnPlanner.Fold(query);
+        var parts = Regex.Split(folded, @"[^\p{L}\p{Nd}]+");
+        var list = new List<string>();
+        foreach (var part in parts)
+        {
+            if (part.Length < 3 || QueryStopwords.Contains(part))
+            {
+                continue;
+            }
+
+            list.Add(part);
+        }
+
+        return list;
     }
 
     private static List<WebFinding> Deduplicate(List<WebFinding> findings)

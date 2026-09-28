@@ -58,28 +58,39 @@ public sealed class DeepResearchService
             subQueries.Count,
             userQuestion);
 
-        // Bước 2: research lần lượt (tuần tự để nhẹ máy + lịch sự với DDG)
+        // Bước 2: tối đa 2 truy vấn cùng lúc — nhanh hơn tuần tự, vẫn nhẹ với DuckDuckGo
         var merged = new List<WebFinding>();
-        foreach (var q in subQueries)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            try
+        await Parallel.ForEachAsync(
+            subQueries,
+            new ParallelOptions
             {
-                var partial = await _webResearch.ResearchAsync(q, cancellationToken);
-                if (partial.HasResults)
+                MaxDegreeOfParallelism = 2,
+                CancellationToken = cancellationToken
+            },
+            async (q, ct) =>
+            {
+                try
                 {
-                    merged.AddRange(partial.Findings);
+                    var partial = await _webResearch.ResearchAsync(q, ct);
+                    if (!partial.HasResults)
+                    {
+                        return;
+                    }
+
+                    lock (merged)
+                    {
+                        merged.AddRange(partial.Findings);
+                    }
                 }
-            }
-            catch (OperationCanceledException)
-            {
-                throw;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogWarning(ex, "Deep Research lỗi ở sub-query: {Q}", q);
-            }
-        }
+                catch (OperationCanceledException)
+                {
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Deep Research lỗi ở sub-query: {Q}", q);
+                }
+            });
 
         // Bước 3: dedupe theo URL/title
         var unique = Deduplicate(merged).Take(maxSources).ToList();
@@ -91,12 +102,9 @@ public sealed class DeepResearchService
         // Bước 4: đánh số citation + ghép context
         var citations = new List<CitationSource>();
         var sb = new StringBuilder();
-        sb.AppendLine("=== DEEP RESEARCH — KẾT QUẢ TỔNG HỢP TỪ NHIỀU GÓC ĐỘ ===");
-        sb.AppendLine($"Câu hỏi gốc: {userQuestion}");
-        sb.AppendLine($"Các truy vấn đã chạy: {string.Join(" | ", subQueries)}");
-        sb.AppendLine($"Thời điểm: {DateTimeOffset.Now:yyyy-MM-dd HH:mm} (local)");
-        sb.AppendLine();
-        sb.AppendLine("Khi trả lời, hãy nêu số nguồn dạng [1], [2]... nếu dùng thông tin từ chúng.");
+        sb.AppendLine("=== DEEP RESEARCH ===");
+        sb.AppendLine($"Câu hỏi: {userQuestion}");
+        sb.AppendLine("Câu đầu là kết luận. Trích [n] một lần. Không bịa số liệu ngoài các đoạn dưới.");
         sb.AppendLine();
 
         for (var i = 0; i < unique.Count; i++)

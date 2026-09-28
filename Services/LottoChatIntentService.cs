@@ -205,12 +205,11 @@ public sealed class LottoChatIntentService
     private static LottoChatIntent ResolveIntent(string message)
     {
         var m = message.ToLowerInvariant();
-        if (!ContainsAny(m, "xổ số", "xo so", "xsmb", "xsmn", "xsmt", "vietlott", "lô", "lo ", "đài", "dai "))
+        // Chỉ vào nhánh xổ số khi câu có tín hiệu xổ số.
+        // "dự đoán giá vàng" / "Việt Nam thắng Indo" trước đây bị coi là dự đoán lô.
+        if (!IsLottoQuestion(m))
         {
-            if (!ContainsAny(m, "dự đoán", "du doan", "dự báo"))
-            {
-                return LottoChatIntent.None;
-            }
+            return LottoChatIntent.None;
         }
 
         if (ContainsAny(m, "lô gan", "lo gan", "gan cực", "gan cuc", "số gan", "so gan"))
@@ -239,6 +238,58 @@ public sealed class LottoChatIntentService
         }
 
         return LottoChatIntent.None;
+    }
+
+    /// <summary>
+    /// Tín hiệu xổ số rõ (XSMB, lô đề, Vietlott...) hoặc đài/miền kèm động từ tra cứu.
+    /// Tên tỉnh một mình không đủ — tránh nuốt câu hỏi thời tiết, giá, thể thao.
+    /// </summary>
+    private static bool IsLottoQuestion(string message)
+    {
+        if (ContainsAny(
+                message,
+                "xổ số", "xo so", "xsmb", "xsmn", "xsmt", "vietlott",
+                "lô gan", "lo gan", "lô đề", "lo de", "lô tô", "lo to", "con lô", "con lo",
+                "bạch thủ", "bach thu", "song thủ", "song thu",
+                "soi cầu", "soi cau", "giải đặc biệt", "giai dac biet",
+                "xiên 2", "xiên 3", "xiên 4", "xien 2", "xien 3", "xien 4",
+                "mega 6", "power 6", "keno"))
+        {
+            return true;
+        }
+
+        var mentionsRegion = ContainsAny(
+            message,
+            "miền bắc", "mien bac", "miền nam", "mien nam", "miền trung", "mien trung");
+        var mentionsDai = ContainsAny(message, "đài ", "dai ") && MentionsKnownDai(message);
+        if (!mentionsRegion && !mentionsDai)
+        {
+            return false;
+        }
+
+        return ContainsAny(
+            message,
+            "dự đoán", "du doan", "dự báo", "du bao",
+            "kết quả", "ket qua", "lịch sử", "lich su",
+            "lô", "hôm qua", "hom qua", "mới nhất", "moi nhat", "soi");
+    }
+
+    private static bool MentionsKnownDai(string message)
+    {
+        var normalized = Normalize(message);
+        foreach (var profile in LottoGameCatalog.All.Where(p => p.RequiresDai))
+        {
+            foreach (var dai in LottoGameCatalog.GetDaiList(profile.Kind))
+            {
+                var nameKey = Normalize(dai.Name);
+                if (nameKey.Length >= 3 && normalized.Contains(nameKey, StringComparison.Ordinal))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     private static (string? GameKind, string? DaiCode) ResolveGameAndDai(string message)

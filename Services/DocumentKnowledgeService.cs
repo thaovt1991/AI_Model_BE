@@ -287,25 +287,13 @@ public sealed class DocumentKnowledgeService
             scored[i] = (s.Chunk, hybrid, cos, s.Bm25);
         }
 
+        // Ngưỡng 0.08: bỏ đoạn gần như không liên quan.
+        // Không fallback sang đoạn đầu file — đoạn lệch chủ đề làm model phán đoán sai.
         var top = scored
-            .Where(s => s.Score > 0.02f)
+            .Where(s => s.Score >= 0.08f)
             .OrderByDescending(s => s.Score)
             .Take(_maxChunksPerQuery)
             .ToList();
-
-        // Fallback: không khớp → lấy đoạn đầu mỗi file (giống hành vi cũ)
-        if (top.Count == 0)
-        {
-            foreach (var docId in documentIds.Distinct())
-            {
-                if (_chunks.TryGetValue(docId, out var docChunks) && docChunks.Count > 0)
-                {
-                    top.Add((docChunks[0], 0.01f, 0f, 0f));
-                }
-            }
-
-            top = top.Take(_maxChunksPerQuery).ToList();
-        }
 
         if (top.Count == 0)
         {
